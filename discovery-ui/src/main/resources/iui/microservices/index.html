@@ -1,0 +1,198 @@
+<!--
+
+    Copyright 2016 ZTE, Inc. and others.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title id="org_onap_msb_discover_title" name_i18n="org_onap_msb_discover_ui_i18n"></title>
+<link rel="shortcut icon" href="img/zte_logo_16.gif" />
+
+<link
+	href="js/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet" />
+
+<link
+  href="js/fontAwesome/css/font-awesome.min.css"
+  rel="stylesheet" />
+
+
+
+<link href="css/route.css" rel="stylesheet" type="text/css" />
+<link href="css/animate.min.css" rel="stylesheet" type="text/css" />
+<link href="js/dataTables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="css/base.css" rel="stylesheet" type="text/css" />
+<style>
+.ms-controller {
+	visibility: hidden
+}
+</style>
+ <script type="text/javascript">
+
+      // var domainPath=window.location.pathname=="/"?"":window.location.pathname; 
+
+      var apiBasePath="/api/msdiscover/v1";
+
+</script>
+
+</head>
+<body class="ms-controller"  ms-controller="routeController" >
+
+  <div  id="routeHead">
+        <div class="navbar-inner container-fluid" id="top-bar">
+            <header class="row-fluid">            
+            <div class="logoimg"><img class="logo" src="img/logo.png" alt="Logo"></div>
+            <div class="chineseTitle" id="org_onap_msb_route_chinese_name" name_i18n="org_onap_msb_discover_ui_i18n"></div>
+            <div class="englishTitle" id="org_onap_msb_route_english_name" name_i18n="org_onap_msb_discover_ui_i18n"></div>
+            </header>
+        </div>
+</div>
+ <script type="text/javascript">if (self != top) {document.getElementById("routeHead").style.display="none";}</script>
+
+<div style="background-color: #fff;">
+
+<div id="servicesListDiv">
+ <div class="searchDiv">
+
+  
+  <div class="searchTitle"> 
+    <i class="icon fa fa-search"></i>
+  </div>
+     <div class="input-group searchInput"  >
+               <div class="input-group-btn" >
+                  <button type="button" class="btn btn-default 
+                     dropdown-toggle" data-toggle="dropdown">
+                     {{selectSearch.name}}
+                     <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" ms-each-search="searchTypeName">
+                     
+                    
+                     <li><a ms-click="setSearchType(search.name,search.index)">{{search.name}}</a></li>
+                     
+                  </ul>
+               </div><!-- /btn-group -->
+               <input type="text" class="form-control" placeholder=""   ms-keypress="searchService()" id="org_onap_msb_discover_search_tip" name_i18n="org_onap_msb_discover_ui_i18n"
+               ms-duplex="selectSearch.context">
+
+            </div><!-- /input-group -->
+           <div> <button type="button" class="btn btn-default" ms-click="searchService()" id="org_onap_msb_discover_btn_search" name_i18n="org_onap_msb_discover_ui_i18n"></button>
+           </div>
+
+  </div>
+
+
+ <div class="row row1 container-fluid" >
+
+ 
+
+  <div class="form-title">
+      <i class=" fa fa-cloud"></i> 
+      <span id="org_onap_msb_discover_form_servicelist" name_i18n="org_onap_msb_discover_ui_i18n"></span>     
+         <a  href="serviceMng.html?type=add" onclick="parent.gotoServiceRegisterPage()" style="float:right"><button class="btn btn-primary" id="app-new-btn"><i class=" fa fa-plus-circle"></i> <span id="org_onap_msb_discover_btn_addservice" name_i18n="org_onap_msb_discover_ui_i18n"></span></button></a>
+   </div>
+
+     <div class="row" data-name="route_zone" >
+
+   
+      <div>
+               <table class="table table-striped table-bordered  table-hover table-details" id="msbTable">
+                                    <thead>
+                                        <tr>                                         
+                                            <th id="org_onap_msb_discover_form_service_no" name_i18n="org_onap_msb_discover_ui_i18n"></th> 
+                                            <th id="org_onap_msb_discover_form_servicename" name_i18n="org_onap_msb_discover_ui_i18n"></th>
+                                            <th id="org_onap_msb_discover_form_version" name_i18n="org_onap_msb_discover_ui_i18n"></th>
+                                            <th id="org_onap_msb_discover_form_namespace" name_i18n="org_onap_msb_discover_ui_i18n"></th>                                        
+                                            <th id="org_onap_msb_discover_form_serviceurl" name_i18n="org_onap_msb_discover_ui_i18n"></th>                                 
+                                            <th id="org_onap_msb_discover_form_protocol" name_i18n="org_onap_msb_discover_ui_i18n"></th>
+                                            <th id="org_onap_msb_discover_form_visualrange" name_i18n="org_onap_msb_discover_ui_i18n"></th>
+                                             <th id="org_onap_msb_discover_form_control" name_i18n="org_onap_msb_discover_ui_i18n"></th>                                                                                
+                                        </tr>
+                                    </thead>
+                                    <tbody ms-each-msb="msbRouteArray">
+                                        <tr>                                                                                     
+                                            <td ms-text="$index+1"></td>
+                                            <td ms-text="msb.serviceName"></td>
+                                            <td ms-text="msb.version"></td>
+                                            <td ms-text="msb.namespace"></td>
+                                            <td ms-text="msb.url"></td>            
+                                            <td ms-text="msb.protocol"></td>
+                                            <td ms-html="routeUtil.showVisualRange(msb.visualRange)"></td>
+                                            <td>
+                                           
+                                              <a href="#" title="org_onap_msb_route_box_btn_view" name_i18n="org_onap_msb_discover_ui_i18n" class="btn btn-default btn-s" ms-click="viewmsbRoute(msb.serviceName,msb.version,msb.namespace)"><i class="fa fa-file-text-o"></i></a>
+                                             
+                                             <span   ms-visible="msb.is_manual==true">
+                                              <a href="#" title="org_onap_msb_route_box_btn_update" name_i18n="org_onap_msb_discover_ui_i18n" class="btn btn-default btn-s" ms-click="updatemsbRoute(msb.serviceName,msb.version,msb.namespace)"><i class="fa fa  fa-pencil-square-o"></i></a>
+                                              <a href="#" title="org_onap_msb_route_box_btn_delete" name_i18n="org_onap_msb_discover_ui_i18n" class="btn btn-default btn-s" ms-click="delmsbRoute(msb.serviceName,msb.version,msb.namespace,this)"><i class="fa fa-trash-o"></i></a>
+                                              </span>
+                                            </td>                                      
+                                        </tr> 
+                                    
+                                                                            
+                                    </tbody>
+                                </table>
+                           
+                      </div>
+  <div style="margin-left:20px"  ms-visible="vm.loading"><img src="img/throbber.gif"></div>
+      
+
+           
+
+      </div>
+
+ </div>
+
+</div>
+
+
+ 
+</div>
+
+
+
+
+
+
+	<script type="text/javascript"	src="js/jquery/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="js/jquery.i18n/jquery.i18n.properties-1.0.9.js"></script>
+ <script type="text/javascript" src="js/iframeResizer/iframeResizer.contentWindow.min.js"></script>
+	<script type="text/javascript"	src="js/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript"  src="js/dataTables/jquery.dataTables.min.js"></script>
+  <script type="text/javascript"  src="js/dataTables/dataTables.bootstrap.min.js"></script>
+  <script src="js/jquery-validation/jquery.validate.js"></script>
+  <script type="text/javascript" src="js/bootbox/bootbox.min.js"></script>
+  <script src="js/bootstrap-growl.min.js"></script>
+	<script type="text/javascript"	src="js/avalon.js"></script>
+<script src="i18n/loadi18nApp_iui-discover_view.js"></script>
+  
+  <script src="js/routeUtil.js"></script>
+  <script src="js/dataTable.js"></script>
+	<script type="text/javascript"   src="js/routeController.js"></script>
+  <script type="text/javascript">
+
+$(function(){
+
+ loadPropertiesSideMenu('', 'msb-iui-discover-i18n', 'i18n/'); 
+ avalon.scan();
+vm.initMSBRoute();
+
+});
+</script>
+	
+</body>
+</html>

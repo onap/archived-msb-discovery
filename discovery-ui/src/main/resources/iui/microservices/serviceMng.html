@@ -1,0 +1,787 @@
+<!--
+
+    Copyright 2016 ZTE, Inc. and others.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title id="org_onap_msb_discover_title" name_i18n="org_onap_msb_discover_ui_i18n"></title>
+<link rel="shortcut icon" href="img/zte_logo_16.gif" />
+<link
+  href="js/fontAwesome/css/font-awesome.min.css"
+  rel="stylesheet" />
+<link
+  href="js/bootstrap/css/bootstrap.min.css"
+  rel="stylesheet" />
+
+
+
+
+<link href="css/route.css" rel="stylesheet" type="text/css" />
+<link href="css/animate.min.css" rel="stylesheet" type="text/css" />
+<link href="js/dataTables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="js/tokenfield/css/bootstrap-tokenfield.css" type="text/css" rel="stylesheet">
+<link href="css/base.css" rel="stylesheet" type="text/css" />
+<style>
+.ms-controller {
+  visibility: hidden
+}
+</style>
+ <script type="text/javascript">
+
+      // var domainPath=window.location.pathname=="/"?"":window.location.pathname; 
+
+      var apiBasePath="/api/msdiscover/v1";
+
+</script>
+
+</head>
+<body class="ms-controller"  ms-controller="serviceController" >
+
+  <div  id="routeHead">
+        <div class="navbar-inner container-fluid" id="top-bar">
+            <header class="row-fluid">            
+            <div class="logoimg"><img class="logo" src="img/logo.png" alt="Logo"></div>
+            <div class="chineseTitle" id="org_onap_msb_route_chinese_name" name_i18n="org_onap_msb_discover_ui_i18n"></div>
+            <div class="englishTitle" id="org_onap_msb_route_english_name" name_i18n="org_onap_msb_discover_ui_i18n"></div>
+            </header>
+        </div>
+</div>
+ <script type="text/javascript">if (self != top) {document.getElementById("routeHead").style.display="none";}</script>
+
+<div style="background-color: #fff;">
+
+
+<div id="serviceMngDiv" >
+    <div id="noderouteDlg" class="modal  fade" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel" aria-hidden="true" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
+                        <h3 id="myModalLabel" ms-text="nodeDlgInfo.titleName"></h3>
+                    </div>
+                    <div class="modal-body">
+                     <div class="alert alert-info" ms-visible="node_rtn.info_block" id="org_onap_msb_discover_form_saveinfo" name_i18n="org_onap_msb_discover_ui_i18n"></div>
+                    <div class="alert alert-danger " ms-visible="node_rtn.warning_block" ms-text="node_rtn.rtn_info"></div>
+
+      <form class="form-horizontal" id="nodeForm" role="form">  
+                    <div class="tipArea" id="org_onap_msb_discover_form_baseinfo" name_i18n="org_onap_msb_discover_ui_i18n"></div> 
+                    <div class="form-group">
+                            <label class="control-label col-sm-3">
+                                    <span>IP</span>
+                                    <span class="required" aria-required="true">*</span>
+                                </label>
+                            <div class="col-sm-6">  
+                                <input type="text" ms-duplex="nodeInfo.ip"  name="nodeInfo_ip"  class="form-control"  />
+                                <span class="help-block"></span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">
+                                    <span>Port</span>
+                                    <span class="required" aria-required="true">*</span>
+                                </label>
+                            <div class="col-sm-6">                            
+                       
+                                <input type="text" ms-duplex="nodeInfo.port"  name="nodeInfo_port" class="form-control"   />
+                                <span class="help-block"></span>
+                            </div>
+                              <div class="col-sm-3">                            
+                       
+                            <a href="javascript:;"  class="collapse-box" data-toggle="collapse" 
+                             data-target="#advanceDiv"><button id="moreCondBtn" type="button" class="btn radius_l white" style="float: left;">
+                                 <span class="caret borderBotTop"></span>
+                                 <span id="org_onap_msb_discover_form_advancedinfo" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                            </button>
+                            </a>
+                            </div>
+                            
+                        </div>
+
+                  
+
+          <div id="advanceDiv"  class="collapse in">
+                       
+
+            <div class="form-group">
+                            <label class="control-label col-sm-3">
+                                    <span id="org_onap_msb_discover_property_ha_role" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                                 
+                                </label>
+                            <div class="col-sm-7">  
+                                 <select class="form-control m-b" ms-each="$ha_role_Type"  name="ha_role" ms-duplex="nodeInfo.ha_role" style="width: 120px;">             
+                                  <option ms-attr-value='el'>{{el}}</option>
+                                 </select>
+                                <span class="help-block"></span>
+                            </div>
+                            
+                        </div>
+
+  
+                        <div class="tipArea" id="org_onap_msb_discover_property_lb_param" name_i18n="org_onap_msb_discover_ui_i18n"></div> 
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">
+                                    <span>Weight</span>                                   
+                                </label>
+                            <div class="col-sm-3">
+                              
+                                <div class="input-group spinner"  style="display: inline-flex;">
+                                            <input name="nodeInfo_weight" ms-duplex="nodeInfo.weight" type="text" class="form-control" value="1" data-toggle="tooltip" id="org_onap_msb_discover_property_default_1" name_i18n="org_onap_msb_discover_ui_i18n" placeholder="">
+
+                                            <div class="input-group-btn-vertical">
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                            </div>
+                                        </div>
+                                <span id="nodeInfo_weight-err"  class="help-block"></span>
+                            </div>
+                            
+                      
+                            <label class="control-label col-sm-2">
+                                    <span>max_fails</span>                                   
+                                </label>
+                            <div class="col-sm-3">
+                              
+                                 <div class="input-group spinner"  style="display: inline-flex;">
+                                            <input name="nodeInfo_max_fails" ms-duplex="nodeInfo.max_fails" type="text" class="form-control" value="1" data-toggle="tooltip" id="org_onap_msb_discover_property_default_1" name_i18n="org_onap_msb_discover_ui_i18n" placeholder="">
+
+                                            <div class="input-group-btn-vertical">
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                            </div>
+                                        </div>
+                                <span id="nodeInfo_max_fails-err"  class="help-block"></span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">
+                                    <span>fail_timeout</span>                                   
+                                </label>
+                            <div class="col-sm-6">
+                              
+                              <div class="input-group spinner"  style="display: inline-flex;">
+                                            <input name="nodeInfo_fail_timeout" ms-duplex="nodeInfo.fail_timeout" type="text" class="form-control" value="10" data-toggle="tooltip" id="org_onap_msb_discover_property_default_10" name_i18n="org_onap_msb_discover_ui_i18n" placeholder="">
+
+                                            <div class="input-group-btn-vertical">
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                            </div>
+                                        </div>
+                                        <label style="margin-left: 22px;"><span id="org_onap_msb_discover_property_second" name_i18n="org_onap_msb_discover_ui_i18n"></span></label>
+
+
+                                <span id="nodeInfo_fail_timeout-err"  class="help-block"></span>
+                            </div>
+                            
+                        </div>
+
+                         <div class="tipArea" id="org_onap_msb_discover_property_health_param" name_i18n="org_onap_msb_discover_ui_i18n"></div> 
+
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">
+                                    <span>policy</span>                                 
+                                </label>
+                            <div class="col-sm-6">
+                             <select class="form-control m-b" ms-each="$healthCheckType"  name="policy" ms-duplex="nodeInfo.checkType" >             
+                                  <option ms-attr-value='el'>{{el}}</option>
+                                 </select>
+                                
+                                <span class="help-block"></span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="form-group"    ms-visible="nodeInfo.checkType=='TCP' || nodeInfo.checkType=='HTTP'">
+                            <label class="control-label col-sm-3">
+                                    <span>URL</span>                                   
+                                </label>
+                            <div class="col-sm-6">
+                              
+                                <input type="text" ms-duplex="nodeInfo.checkUrl"  name="checkUrl" class="form-control" /> 
+                                <span class="help-block"></span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="form-group"  ms-visible="nodeInfo.checkType=='TCP' || nodeInfo.checkType=='HTTP'">
+                            <label class="control-label col-sm-3">
+                                    <span>Interval</span>                                   
+                                </label>
+                            <div class="col-sm-3">
+                            
+                                  <div class="input-group spinner"  style="display: inline-flex;">
+                                            <input name="checkInterval" ms-duplex="nodeInfo.checkInterval" type="text" class="form-control" value="10" data-toggle="tooltip"  name_i18n="org_onap_msb_discover_ui_i18n" placeholder="">
+
+                                            <div class="input-group-btn-vertical">
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                            </div>
+                                        </div>
+                                        <!--label style="margin-left:5px;"><span id="org_onap_msb_discover_property_second" name_i18n="org_onap_msb_discover_ui_i18n"></span></label-->
+                                <span id="checkInterval-err" class="help-block"></span>
+                            </div>
+                             <label class="control-label col-sm-2">
+                                    <span>TimeOut</span>                                   
+                                </label>
+                            <div class="col-sm-3">
+                                <div class="input-group spinner"  style="display: inline-flex;">
+                                            <input name="checkTimeOut" ms-duplex="nodeInfo.checkTimeOut" type="text" class="form-control" value="10" data-toggle="tooltip"  name_i18n="org_onap_msb_discover_ui_i18n" placeholder="">
+
+                                            <div class="input-group-btn-vertical">
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                            </div>
+                                        </div>
+                                        <!--label style="margin-left:5px;"><span id="org_onap_msb_discover_property_second" name_i18n="org_onap_msb_discover_ui_i18n"></span></label-->
+                                <span id="checkTimeOut-err" class="help-block"></span>
+
+                            </div>
+                            
+                        </div>
+                          <div class="form-group"  ms-visible="nodeInfo.checkType=='TTL'">
+                            <label class="control-label col-sm-3">
+                                    <span>TTL</span>                                   
+                                </label>
+                            <div class="col-sm-6">
+                            
+                                  <div class="input-group spinner"  style="display: inline-flex;">
+                                            <input name="ttl" ms-duplex="nodeInfo.ttl" type="text" class="form-control" value="10" data-toggle="tooltip"  name_i18n="org_onap_msb_discover_ui_i18n" placeholder="">
+
+                                            <div class="input-group-btn-vertical">
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                            </div>
+                                        </div>
+                                        <label style="margin-left:22px;"><span id="org_onap_msb_discover_property_second" name_i18n="org_onap_msb_discover_ui_i18n"></span></label>
+                                <span id="ttl-error" class="help-block"></span>
+                            </div>
+                            
+                        </div>
+                </div>       
+
+            
+            </form>
+       
+         
+        </div>
+          
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true" id="org_onap_msb_route_form_btn_cancel" name_i18n="org_onap_msb_discover_ui_i18n"></button>
+                        <button class="btn btn-primary" type="submit" ms-click="savenodeInfo()" id="org_onap_msb_route_form_btn_save" name_i18n="org_onap_msb_discover_ui_i18n"></button>
+                    </div>
+                </div>
+
+            </div>
+  </div>
+
+  <div class="row row1 container-fluid" >
+
+
+        <div class="alert alert-info" ms-visible="server_rtn.info_block"  id="org_onap_msb_discover_form_saveinfo" name_i18n="org_onap_msb_discover_ui_i18n"></div>
+        <div class="alert alert-danger " ms-visible="server_rtn.warning_block" ms-text="server_rtn.rtn_info"></div>
+
+     <div id="tableTitle" class="row" style="margin-top: 15px; display: block;">
+            <div class="col-xs-6 col-md-6 col-sm-6 col-lg-6 titlefont" ms-text="pageInfo.pageTitle"></div>
+        </div>
+        
+        <div class="separator-line"></div>   
+
+        <div class="row-fluid role_table" data-name="table_zone">
+
+        <form action="#" class="form-horizontal roleForm" id="msbForm">
+        <div class="form-body">
+
+            <div class="form-title">
+                <span id="org_onap_msb_discover_form_baseinfo" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+            </div>
+            <div class="row">
+    
+          <div class="form-group col-xs-6">
+                        <label class="control-label col-xs-3 "><span id="org_onap_msb_discover_form_servicename" name_i18n="org_onap_msb_discover_ui_i18n"></span> <span class="required">*</span>
+                        </label>
+
+                        <div class="col-xs-7">
+                             <input type="text"  ms-attr-disabled="vm.pageInfo.pageType!='add'"  ms-duplex="msbRouteInfo.serviceName"  name="serviceName"  class="form-control"  />
+                                <span class="help-block"></span>
+                        </div>
+                  
+                 </div>
+                 <div class="form-group col-xs-6">
+                        <label class="control-label col-xs-3"><span id="org_onap_msb_discover_form_version" name_i18n="org_onap_msb_discover_ui_i18n"></span></label>
+
+                         <div class="col-xs-7">                            
+                             <div class="item-tip" id="org_onap_msb_discover_form_version_tip" name_i18n="org_onap_msb_discover_ui_i18n"></div>
+                                <input type="text"  ms-attr-disabled="vm.pageInfo.pageType!='add'"  ms-duplex="msbRouteInfo.version"  name="version" class="form-control form-tip"   />
+                                <span class="help-block"></span>
+                            </div>
+               </div>    
+            </div>  
+            <div class="row">
+                      <div class="form-group col-xs-6">
+                            <label class="control-label col-xs-3">
+                                    <span id="org_onap_msb_discover_form_serviceurl" name_i18n="org_onap_msb_discover_ui_i18n"></span>                                   
+                                </label>
+                            <div class="col-xs-7">
+                              
+                                <input type="text"  ms-attr-disabled="vm.pageInfo.pageType=='view'"  ms-duplex="msbRouteInfo.url"  name="url" class="form-control" />
+                                <span class="help-block"></span>
+                            </div>
+                            
+                        </div>
+
+                         <div class="form-group col-xs-6" >
+                            <label class="control-label col-xs-3">
+                                    <span id="org_onap_msb_discover_form_lb" name_i18n="org_onap_msb_discover_ui_i18n"></span>                                    
+                                </label>
+                            <div class="col-xs-7">
+                                <select class="form-control m-b" ms-each="msbLbPolicyRange"  name="lbPolicyRange" ms-duplex="msbRouteInfo.lb_policy"  ms-attr-disabled="vm.pageInfo.pageType=='view'" >             
+                                  <option ms-attr-value='el.value'>{{el.name}}</option>
+                                 </select>
+                                <span class="help-block"></span>
+                            </div>
+                            
+                        </div>
+
+                       
+
+                       
+                       
+         </div>
+     <div class="row">
+
+
+                <div class="form-group col-xs-6">
+                            <label class="control-label col-xs-3">
+                                    <span id="org_onap_msb_discover_form_protocol" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                                    <span class="required" aria-required="true">*</span>
+                                </label>
+                            <div class="col-xs-7">
+                                <select class="form-control m-b" ms-each="$msbProtocol"  name="protocol" ms-duplex="msbRouteInfo.protocol"   ms-attr-disabled="vm.pageInfo.pageType!='add'" ms-visible="msbRouteInfo.protocol!='PORTAL'">             
+                                  <option ms-attr-value='el'>{{el}}</option>
+                                 </select>
+                                 <input type="text"  ms-visible="msbRouteInfo.protocol=='PORTAL'" class="form-control" disabled  value="PORTAL"/>
+                                
+                                <span class="help-block"></span>
+                            </div>
+
+                            
+                        </div>
+
+
+                          <div class="form-group col-xs-6">
+                            <label class="control-label col-xs-3">
+                                    <span id="org_onap_msb_discover_form_visualrange" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                                    <span class="required" aria-required="true">*</span>
+                                </label>
+                            <div class="col-xs-7">
+                                <!--select class="form-control m-b" ms-each="$msbVisualRange"  name="visualRange" ms-duplex="msbRouteInfo.visualRange">             
+                                  <option ms-attr-value='el.value'>{{el.name}}</option>
+                                 </select-->
+                                   <input  type="checkbox" name="chkVisualRange" ms-duplex="msbRouteInfo.visualRangeArray" value="0" ms-attr-disabled="vm.pageInfo.pageType=='view'"><span style="margin-right: 20px;"   id="org_onap_msb_route_form_intersystem" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                                     <input type="checkbox" name="chkVisualRange"  ms-duplex="msbRouteInfo.visualRangeArray" value="1" ms-attr-disabled="vm.pageInfo.pageType=='view'"><span style="margin-right: 20px;" id="org_onap_msb_route_form_insystem" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                                <span class="help-block"></span>
+                            </div>
+                            
+                        </div>
+                
+
+                       
+
+         </div>         
+
+
+         <div class="row" ms-visible="msbRouteInfo.protocol=='TCP'||msbRouteInfo.protocol=='UDP'">
+                        <div class="form-group col-xs-6" >
+                          <label class="control-label col-xs-3"><span></span></label>
+                          <div class="col-xs-7" >
+                           <input  type="checkbox" ms-duplex="if_publish_port" name="if_publish_port" id="if_publish_port" value="1" ms-attr-disabled="vm.pageInfo.pageType=='view'" /><span style="margin-right: 20px;" id="org_onap_msb_discover_form_ifpublish" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                            </div>
+                            
+                        </div>
+
+                      
+
+                            <div class="form-group col-xs-6">
+                                        <label class="control-label col-xs-3"><span id="org_onap_msb_discover_form_publishport" name_i18n="org_onap_msb_discover_ui_i18n"></span></label>
+                                        <div class="col-xs-7">                            
+                                         
+                                           
+                                          <input type="text" ms-duplex="msbRouteInfo.publish_port"  name="publish_port" class="form-control" ms-attr-disabled="vm.pageInfo.pageType=='view' || vm.if_publish_port.length==0"  />
+
+                                          </div>
+
+                               </div>  
+
+              
+                            
+                       
+                       
+
+         </div>   
+
+         <div class="row" ms-visible="msbRouteInfo.protocol=='HTTP'||msbRouteInfo.protocol=='REST'||msbRouteInfo.protocol=='UI'||msbRouteInfo.protocol=='PORTAL'">
+                        <div class="form-group col-xs-6" >
+                          <label class="control-label col-xs-3"><span></span></label>
+                          <div class="col-xs-7" >
+                           <input  type="checkbox" ms-duplex="if_http_publish_port" name="if_http_publish_port" id="if_http_publish_port" value="1" ms-attr-disabled="vm.pageInfo.pageType=='view'" /><span style="margin-right: 20px;" id="org_onap_msb_discover_form_ifhttppublish" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                            </div>
+                            
+                        </div>
+
+                      
+
+                            <div class="form-group col-xs-6">
+                                        <label class="control-label col-xs-3"><span id="org_onap_msb_discover_form_publishport" name_i18n="org_onap_msb_discover_ui_i18n"></span></label>
+                                        <div class="col-xs-7">                            
+                                       <div class="item-tip" id="org_onap_msb_discover_form_publish_port_tip" name_i18n="org_onap_msb_discover_ui_i18n"></div>                             
+                                          <input type="text" ms-duplex="msbRouteInfo.publish_port"  name="http_publish_port" class="form-control  form-tip"  ms-attr-disabled="vm.pageInfo.pageType=='view' || vm.if_http_publish_port.length==0" />
+
+                                          </div>
+
+                               </div>  
+
+              
+                            
+                       
+                       
+
+         </div>             
+      
+       <div class="row">
+
+                <div class="form-group col-xs-6">
+                            <label class="control-label col-xs-3">
+                                    <span id="org_onap_msb_discover_form_namespace" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                                   
+                                </label>
+                            <div class="col-xs-7">
+                                <input type="text"  ms-attr-disabled="vm.pageInfo.pageType!='add'"   ms-duplex="msbRouteInfo.namespace"  name="namespace" class="form-control" />
+                                <span class="help-block"></span>
+                            </div>
+    
+                 </div>
+
+
+                  <div class="form-group col-xs-6">
+                            <label class="control-label col-xs-3">
+                                    <span id="org_onap_msb_discover_form_networkPlaneType" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                                   
+                                </label>
+                            <div class="col-xs-7">
+                            <div class="item-tip" id="org_onap_msb_discover_form_networkPlaneType_tip" name_i18n="org_onap_msb_discover_ui_i18n"></div>                             
+                                <input type="text"  ms-attr-disabled="vm.pageInfo.pageType=='view'"  ms-duplex="msbRouteInfo.network_plane_type"  name="networkPlaneType" class="form-control form-tip" />
+                                <span class="help-block"></span>
+                            </div>
+    
+                 </div>
+                
+
+                       
+
+         </div> 
+
+         <div class="row">
+
+                <div class="form-group col-xs-6">
+                            <label class="control-label col-xs-3">
+                                    <span id="org_onap_msb_discover_form_labels" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+                                   
+                                </label>
+                            <div class="col-xs-7">
+                              <div class="item-tip item-tip-focus" id="org_onap_msb_discover_form_labels_tip" name_i18n="org_onap_msb_discover_ui_i18n"></div>  
+                                <input type="text" ms-attr-disabled="vm.pageInfo.pageType=='view'" id="labels" class="form-control " />
+                                <span class="help-block"></span>
+                            </div>
+    
+                 </div>
+
+                  <div class="form-group col-xs-6">
+                            <label class="control-label col-xs-3">
+                                    MetaData
+                                   
+                                </label>
+                            <div class="col-xs-7">
+                              <div class="item-tip item-tip-focus" id="org_onap_msb_discover_form_metadata_tip" name_i18n="org_onap_msb_discover_ui_i18n"></div>  
+                                <input type="text" ms-attr-disabled="vm.pageInfo.pageType=='view'" id="metadata" class="form-control " />
+                                <span class="help-block"></span>
+                            </div>
+    
+                 </div>
+      
+
+         </div> 
+
+
+         <div class="row">
+
+                <div class="form-group col-xs-6">
+                            <label class="control-label col-xs-3">
+                                    Host
+                                   
+                                </label>
+                            <div class="col-xs-7">
+                            
+                                <input type="text" name="host" ms-duplex="msbRouteInfo.host"  ms-attr-disabled="vm.pageInfo.pageType=='view'" class="form-control" />
+                                <span class="help-block"></span>
+                            </div>
+    
+                 </div>
+
+                  <div class="form-group col-xs-6">
+                            <label class="control-label col-xs-3">
+                                    Path
+                                   
+                                </label>
+                            <div class="col-xs-7">
+                             
+                                <input type="text" name="path" ms-duplex="msbRouteInfo.path"  ms-attr-disabled="vm.pageInfo.pageType=='view'"  class="form-control " />
+                                <span class="help-block"></span>
+                            </div>
+    
+                 </div>
+      
+
+         </div> 
+
+
+                        
+
+            
+     
+            <div class="form-title">
+                <span id="org_onap_msb_discover_form_hostlist" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+         
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+
+                 <div class="form-group">
+                            
+                         
+                                
+                                  <div class="col-xs-12" ms-visible="vm.pageInfo.pageType!='view'">  
+                                 <a href="#" ms-click="$showNodeDlg()" class="btn btn-default " ><i class="fa fa-plus-circle"></i> <span id="org_onap_msb_discover_form_addhost" name_i18n="org_onap_msb_discover_ui_i18n"></span></a>
+                                 </div>
+                       </div>
+
+                         <div class="form-group">
+                           
+                           <div  class=" col-xs-12">
+                                 <table class="table table-striped table-bordered table-hover dataTable hostTable">
+                                   <thead>
+                                      <tr>
+                                         <th rowspan="2" id="org_onap_msb_discover_form_service_no" name_i18n="org_onap_msb_discover_ui_i18n"></th>
+                                         <th rowspan="2">IP</th>
+                                         <th rowspan="2">PORT</th>
+                                         <th rowspan="2" id="org_onap_msb_discover_property_ha_role" name_i18n="org_onap_msb_discover_ui_i18n"></th>
+                                         <th colspan="3" id="org_onap_msb_discover_form_lb" name_i18n="org_onap_msb_discover_ui_i18n"></th>
+                                       
+                                         <th colspan="4" id="org_onap_msb_discover_property_health_param" name_i18n="org_onap_msb_discover_ui_i18n"></th>
+                                         <th rowspan="2" ms-visible="vm.pageInfo.pageType!='view'" id="org_onap_msb_discover_form_control" name_i18n="org_onap_msb_discover_ui_i18n"></th>
+                                      </tr>
+                                      <tr class="subHead">
+                                        <th>weight</th>
+                                        <th>max_fails</th>
+                                        <th>fail_timeout(s)</th>
+                                        <th>policy</th>
+                                        <th>URL</th>
+                                        <th>Interval</th>
+                                        <th>TimeOut</th>
+                                    </tr>
+                                   </thead>
+                                   <tbody ms-each-node="vm.msbRouteInfo.nodes">
+                                      <tr>
+                                         <td ms-text="$index+1"></td>
+                                         <td ms-text="node.ip"></td>
+                                         <td ms-text="node.port"></td>
+                                         <td ms-text="node.ha_role"></td>
+                                         <td ms-text="node.weight"></td>
+                                         <td ms-text="node.max_fails"></td>
+                                         <td>{{node.fail_timeout}}</td>
+                                         <td ms-text="node.checkType"></td>
+                                         <td ms-text="node.checkUrl"></td>
+                                         <td ms-text="routeUtil.showCheckInterval(node)"></td>
+                                          <td ms-text="node.checkTimeOut"></td>
+                                         <td ms-visible="vm.pageInfo.pageType!='view'"><a href="#"title="org_onap_msb_route_box_btn_update" name_i18n="org_onap_msb_discover_ui_i18n" ms-click="updatenodeInfo(node)" class="btn btn-default btn-s nodebtn"><i class="fa fa-pencil-square-o"></i></a>
+                                         <a href="#" title="org_onap_msb_route_box_btn_delete" name_i18n="org_onap_msb_discover_ui_i18n" ms-click="delnodeInfo(node.ip,node.port)" class="btn btn-default btn-s nodebtn"><i class="fa fa-trash-o"></i></a></td>
+                                      </tr> 
+                                   
+                                    
+                   
+                                   </tbody>
+                                   </table> 
+                                </div> 
+
+                        </div>
+                  
+                </div>
+            </div>
+
+        <div ms-visible="vm.msbRouteInfo.protocol=='REST' || vm.msbRouteInfo.protocol=='HTTP' || vm.msbRouteInfo.protocol=='UI'|| vm.msbRouteInfo.protocol=='PORTAL' || (vm.if_publish_port.length>0 &&(vm.msbRouteInfo.protocol=='UDP' || vm.msbRouteInfo.protocol=='TCP'))">
+             <div class="form-title" >
+                <span  id="org_onap_msb_discover_form_publish" name_i18n="org_onap_msb_discover_ui_i18n"></span>
+         
+            </div>
+            <div class="row" >
+                <div class="col-xs-12">
+                 <div class="form-group" ms-visible="vm.publishUrl.ifShowPublishUrl4SysOut">
+                            <label class="col-xs-1" ></label>
+
+                            <div class="col-xs-9" >
+                                   <div class="note note-sysOut" >
+                                    <h4 class="block" id="org_onap_msb_route_form_intersystem" name_i18n="org_onap_msb_discover_ui_i18n"></h4>
+                                    <p ms-html="vm.publishUrl.publishUrl4SysOut"></p>           
+                                    </div>   
+                             
+                            </div>
+                            
+                  </div> 
+                  <div class="form-group" ms-visible="vm.publishUrl.ifShowPublishUrl4SysIn">
+                            <label class="col-xs-1" ></label>
+
+                            <div class="col-xs-9" >
+                                   <div class="note note-sysIn" >
+                                    <h4 class="block" id="org_onap_msb_route_form_insystem" name_i18n="org_onap_msb_discover_ui_i18n"></h4>
+                                    <p ms-html="vm.publishUrl.publishUrl4SysIn"></p>           
+                                    </div>   
+                             
+                            </div>
+                            
+                  </div>
+  
+                </div>
+             </div>
+         </div>    
+            <div class="row">
+                <div class="submBtn btnGroup">
+                    <div class="roleConfirm" ms-visible="vm.pageInfo.pageType!='view'" style="display: inline-block;"><a class="btn grey radius_l"  ms-click="resetRoute()" ><span id="org_onap_msb_route_form_btn_reset" name_i18n="org_onap_msb_discover_ui_i18n"></span></a></div>
+                    <div class="roleConfirm" style="display: inline-block;" ms-visible="vm.pageInfo.pageType!='view'"><a class="btn blue1 radius_l" ms-click="savemsbRoute()"><span id="org_onap_msb_route_form_btn_save" name_i18n="org_onap_msb_discover_ui_i18n"></span></a></div>
+                    <div class="roleConfirm" style="display: inline-block;" ms-visible="vm.pageInfo.pageType!='view'"><a  ms-click="returnList()"><span id="org_onap_msb_route_form_btn_return" name_i18n="org_onap_msb_discover_ui_i18n"></span></a></div>
+                    <div class="roleConfirm" style="display: inline-block;" ms-visible="vm.pageInfo.pageType=='view'"><a class="btn blue1 radius_l" ms-click="closePage()"><span id="org_onap_msb_route_form_btn_close" name_i18n="org_onap_msb_discover_ui_i18n"></a></div>
+                </div>
+            </div>
+        </div>
+</form>
+
+
+        </div>
+
+
+
+
+       
+         
+        </div>
+
+</div>
+ 
+</div>
+
+
+
+
+
+
+  <script type="text/javascript"  src="js/jquery/jquery-1.10.2.min.js"></script>
+   <script type="text/javascript" src="js/jquery.i18n/jquery.i18n.properties-1.0.9.js"></script>
+   <script src="i18n/loadi18nApp_iui-discover_view.js"></script>
+ <script type="text/javascript" src="js/iframeResizer/iframeResizer.contentWindow.min.js"></script>
+  <script type="text/javascript"  src="js/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript"  src="js/dataTables/jquery.dataTables.min.js"></script>
+  <script type="text/javascript"  src="js/dataTables/dataTables.bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/tokenfield/bootstrap-tokenfield.min.js"></script>
+     <script src="js/jquery-validation/jquery.validate.js"></script> 
+  <script type="text/javascript" src="js/bootbox/bootbox.min.js"></script>
+  <script src="js/bootstrap-growl.min.js"></script>
+  <script type="text/javascript"  src="js/avalon.js"></script>
+
+
+
+  <script type="text/javascript"   src="js/serviceController.js"></script>
+
+
+  <script>
+
+$(function(){
+
+   
+
+
+     loadPropertiesSideMenu('', 'msb-iui-discover-i18n', 'i18n/'); 
+     avalon.scan();
+vm.initMSBRoute();
+   $('#advanceDiv').on('show.bs.collapse', function () {
+        $('#moreCondBtn').addClass('blueactive');
+        $('#moreCondBtn .caret').addClass('borderBottom');
+      
+  });
+
+    $('#advanceDiv').on('hide.bs.collapse', function () {
+        $('#moreCondBtn').removeClass('blueactive');
+        $('#moreCondBtn .caret').removeClass('borderBottom');
+  });
+
+    spinnerButtonBindClick();
+
+    $("select[name='protocol']").change(function(){
+       if($(this).val()=="HTTP"){
+            $("input[name='checkUrl']").val("http://"+vm.nodeInfo.ip+":"+vm.nodeInfo.port+"/");
+        }
+        else if($(this).val()=="TCP"){
+              $("input[name='checkUrl']").val(vm.nodeInfo.ip+":"+vm.nodeInfo.port);
+
+        }
+        
+       
+
+        if($(this).val()!=""){
+            if($("input[name='checkInterval']").val()==""){
+                $("input[name='checkInterval']").val("10");
+            }
+
+        }
+        else{
+             $("input[name='checkInterval']").val("");  
+             $("input[name='checkUrl']").val("");              
+        } 
+
+
+    }) 
+
+
+      
+
+ });
+
+  </script>
+    <script src="js/routeUtil.js"></script>
+    <script src="js/dataTable.js"></script>
+    <script src="js/routeFunc.js"></script>
+  
+</body>
+</html>

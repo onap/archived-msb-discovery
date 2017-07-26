@@ -39,14 +39,15 @@
   </properties>
 
   <dependencies>
-
+    <!--
 	<dependency>
          <groupId>org.openresty.centos.6</groupId>
          <artifactId>openresty</artifactId>
          <version>${openresty.version}</version>
          <type>tar.gz</type>
     </dependency>
-
+    -->
+    
      <dependency>
       <groupId>org.onap.msb.discovery</groupId>
       <artifactId>nginx-ext-consul</artifactId>
@@ -119,6 +120,7 @@
         </executions>
       </plugin>
 
+      <!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -128,7 +130,6 @@
             <goals>
               <goal>unpack</goal>
             </goals>
-            <!--解压顺序，在最前面-->
             <phase>generate-resources</phase>
             <configuration>
               <artifactItems>   
@@ -146,7 +147,8 @@
           </execution>          
         </executions>
       </plugin> 
-
+     
+      
       <plugin>
         <groupId>com.coderplus.maven.plugins</groupId>
         <artifactId>copy-rename-maven-plugin</artifactId>
@@ -165,6 +167,7 @@
           </execution>
         </executions>
       </plugin> 
+       -->
 
 
       <plugin>

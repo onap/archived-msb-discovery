@@ -18,18 +18,19 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
+  <parent>
+    <groupId>org.onap.oparent</groupId>
+    <artifactId>oparent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  
   <groupId>org.onap.msb.discovery</groupId>
   <artifactId>msb-discovery-parent</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>onap/msb/msb-discovery-parent</name> 
 
   <properties>
-<!--     <nexusproxy>http://proxynj.zte.com.cn</nexusproxy>
-    <nexus.repository.release>dav:http://10.74.156.77/repos/content/repositories/releases</nexus.repository.release>
-    <nexus.repository.snapshot>dav:http://10.74.156.77/repos/content/repositories/snapshots</nexus.repository.snapshot> -->
-
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

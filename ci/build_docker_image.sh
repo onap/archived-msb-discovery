@@ -24,11 +24,11 @@ if [[ ${NAME} && ${VERSION} && ${DIR} ]]; then
 	echo "begin to build image ${NAME}.."
 	docker build --no-cache -t ${NAME}:${VERSION} . >/dev/null || { echo -e "\nBuild docker image failed!";exit 1; }
 	docker rmi $(docker images | grep "^<none>" | awk '{print $3}') &>/dev/null
-	docker save -o ${NAME}.tar ${NAME}:${VERSION} >/dev/null || { rm -f ${NAME}.tar &>/dev/null;echo -e "\nSave docker image failed!";exit 1; }
-	if [ ! -d ${DIR} ]; then
-		mkdir -p ${DIR}
-	fi
-	mv ${NAME}.tar ${DIR}/${NAME}.tar &>/dev/null
+	# docker save -o ${NAME}.tar ${NAME}:${VERSION} >/dev/null || { rm -f ${NAME}.tar &>/dev/null;echo -e "\nSave docker image failed!";exit 1; }
+	# if [ ! -d ${DIR} ]; then
+	#	mkdir -p ${DIR}
+	# fi
+	# mv ${NAME}.tar ${DIR}/${NAME}.tar &>/dev/null
 	echo "build completes!"
 else
 	echo "not all -n and -v and -d are provided!"

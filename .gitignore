@@ -3,6 +3,7 @@
 .settings/
 .vscode/
 target/
+release/
 .vagrant
 /archives/
 *.jar

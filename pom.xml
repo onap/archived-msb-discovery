@@ -49,7 +49,7 @@
     <blueprintFileDir>src/main/blueprint</blueprintFileDir>
     <version.output>target/version</version.output>
     
-    <onap.nexus.javadocs-url>dav:https://nexus.onap.org/content/sites/site/org/onap/msb/apigateway/${project.version}</onap.nexus.javadocs-url>
+    <onap.nexus.javadocs-url>dav:https://nexus.onap.org/content/sites/site/org/onap/msb/discovery/${project.version}</onap.nexus.javadocs-url>
    </properties>
 
   <modules>

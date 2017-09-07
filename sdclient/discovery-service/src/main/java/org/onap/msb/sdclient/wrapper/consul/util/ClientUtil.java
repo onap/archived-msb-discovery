@@ -1,23 +1,21 @@
 /**
  * Copyright 2016-2017 ZTE, Inc. and others.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.onap.msb.sdclient.wrapper.consul.util;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.WebApplicationException;
@@ -34,13 +32,13 @@ import org.onap.msb.sdclient.wrapper.consul.option.CatalogOptions;
 import org.onap.msb.sdclient.wrapper.consul.option.ParamAdder;
 import org.onap.msb.sdclient.wrapper.consul.option.QueryOptions;
 
-import java.math.BigInteger;
-import java.util.List;
-import java.util.Map;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /**
- * A collection of stateless utility methods for use in constructing
- * requests and responses to the Consul HTTP API.
+ * A collection of stateless utility methods for use in constructing requests and responses to the
+ * Consul HTTP API.
  */
 public class ClientUtil {
 
@@ -54,8 +52,8 @@ public class ClientUtil {
     public static WebTarget queryParams(WebTarget webTarget, Map<String, String> params) {
         WebTarget target = webTarget;
 
-        if(params != null) {
-            for(Map.Entry<String, String> entry : params.entrySet()) {
+        if (params != null) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
                 target = target.queryParam(entry.getKey(), entry.getValue());
             }
         }
@@ -68,17 +66,17 @@ public class ClientUtil {
      * appropriate query string parameters to the request being built.
      *
      * @param webTarget The base {@link javax.ws.rs.client.WebTarget}.
-     * @param  paramAdder will add specific params to the target.
-     * @return A {@link javax.ws.rs.client.WebTarget} with all appropriate query
-     *  string parameters.
+     * @param paramAdder will add specific params to the target.
+     * @return A {@link javax.ws.rs.client.WebTarget} with all appropriate query string parameters.
      */
     public static WebTarget addParams(WebTarget webTarget, ParamAdder paramAdder) {
         return paramAdder == null ? webTarget : paramAdder.apply(webTarget);
     }
 
     /**
-     * Generates a {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} for a specific datacenter,
-     * set of {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}, and a result type.
+     * Generates a {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} for a specific
+     * datacenter, set of {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}, and a
+     * result type.
      *
      * @param target The base {@link javax.ws.rs.client.WebTarget}.
      * @param catalogOptions Catalog specific options to use.
@@ -88,8 +86,7 @@ public class ClientUtil {
      * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse}.
      */
     public static <T> ConsulResponse<T> response(WebTarget target, CatalogOptions catalogOptions,
-                                                 QueryOptions queryOptions,
-                                                 GenericType<T> type) {
+                    QueryOptions queryOptions, GenericType<T> type) {
         target = addParams(target, catalogOptions);
         target = addParams(target, queryOptions);
 
@@ -97,8 +94,9 @@ public class ClientUtil {
     }
 
     /**
-     * Generates a {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} for a specific datacenter,
-     * set of {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}, and a result type.
+     * Generates a {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} for a specific
+     * datacenter, set of {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}, and a
+     * result type.
      *
      * @param target The base {@link javax.ws.rs.client.WebTarget}.
      * @param catalogOptions Catalog specific options to use.
@@ -106,10 +104,8 @@ public class ClientUtil {
      * @param type The generic type to marshall the resulting data to.
      * @param <T> The result type.
      */
-    public static <T> void response(WebTarget target, CatalogOptions catalogOptions,
-                                                 QueryOptions queryOptions,
-                                                 GenericType<T> type,
-                                                 ConsulResponseCallback<T> callback) {
+    public static <T> void response(WebTarget target, CatalogOptions catalogOptions, QueryOptions queryOptions,
+                    GenericType<T> type, ConsulResponseCallback<T> callback) {
 
         target = addParams(target, catalogOptions);
         target = addParams(target, queryOptions);
@@ -118,13 +114,14 @@ public class ClientUtil {
     }
 
     /**
-     * Given a {@link javax.ws.rs.client.WebTarget} object and a type to marshall
-     * the result JSON into, complete the HTTP GET request.
+     * Given a {@link javax.ws.rs.client.WebTarget} object and a type to marshall the result JSON
+     * into, complete the HTTP GET request.
      *
      * @param webTarget The JAX-RS target.
      * @param responseType The class to marshall the JSON into.
      * @param <T> The class to marshall the JSON into.
-     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing the result.
+     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing the
+     *         result.
      */
     public static <T> ConsulResponse<T> response(WebTarget webTarget, GenericType<T> responseType) {
         Response response = webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE).get();
@@ -133,8 +130,8 @@ public class ClientUtil {
     }
 
     /**
-     * Given a {@link javax.ws.rs.client.WebTarget} object and a type to marshall
-     * the result JSON into, complete the HTTP GET request.
+     * Given a {@link javax.ws.rs.client.WebTarget} object and a type to marshall the result JSON
+     * into, complete the HTTP GET request.
      *
      * @param webTarget The JAX-RS target.
      * @param responseType The class to marshall the JSON into.
@@ -142,7 +139,7 @@ public class ClientUtil {
      * @param <T> The class to marshall the JSON into.
      */
     public static <T> void response(WebTarget webTarget, final GenericType<T> responseType,
-                                    final ConsulResponseCallback<T> callback) {
+                    final ConsulResponseCallback<T> callback) {
         webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE).async().get(new InvocationCallback<Response>() {
 
             @Override
@@ -162,8 +159,9 @@ public class ClientUtil {
     }
 
     /**
-     * Extracts Consul specific headers and adds them to a {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse}
-     * object, which also contains the returned JSON entity.
+     * Extracts Consul specific headers and adds them to a
+     * {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} object, which also contains
+     * the returned JSON entity.
      *
      * @param responseType The class to marshall the JSON to.
      * @param response The HTTP response.
@@ -181,7 +179,8 @@ public class ClientUtil {
         long lastContact = lastContactHeaderValue == null ? -1 : Long.parseLong(lastContactHeaderValue);
         boolean knownLeader = knownLeaderHeaderValue == null ? false : Boolean.valueOf(knownLeaderHeaderValue);
 
-        ConsulResponse<T> consulResponse = new ConsulResponse<T>(readResponse(response, responseType), lastContact, knownLeader, index);
+        ConsulResponse<T> consulResponse =
+                        new ConsulResponse<T>(readResponse(response, responseType), lastContact, knownLeader, index);
 
         response.close();
 
@@ -189,8 +188,8 @@ public class ClientUtil {
     }
 
     /**
-     * Converts a {@link Response} object to the generic type provided, or an empty
-     * representation if appropriate
+     * Converts a {@link Response} object to the generic type provided, or an empty representation
+     * if appropriate
      *
      * @param response response
      * @param responseType response type
@@ -205,34 +204,34 @@ public class ClientUtil {
                 return (T) ImmutableList.of();
             } else if (responseType.getRawType() == Optional.class) {
                 return (T) Optional.absent();
-            } else if(responseType.getRawType() == Map.class) {
+            } else if (responseType.getRawType() == Map.class) {
                 return (T) ImmutableMap.of();
             } else {
                 // Not sure if this case will be reached, but if it is it'll be nice to know
-                throw new IllegalStateException("Cannot determine empty representation for " + responseType.getRawType());
+                throw new IllegalStateException(
+                                "Cannot determine empty representation for " + responseType.getRawType());
             }
         }
         return response.readEntity(responseType);
     }
 
     /**
-     * Since Consul returns plain text when an error occurs, check for
-     * unsuccessful HTTP status code, and throw an exception with the text
-     * from Consul as the message.
+     * Since Consul returns plain text when an error occurs, check for unsuccessful HTTP status
+     * code, and throw an exception with the text from Consul as the message.
      *
      * @param response The HTTP response.
      */
     public static void handleErrors(Response response) {
 
         if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL
-                || response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+                        || response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
             // not an error
             return;
         }
 
         try {
             final String message = response.hasEntity() ? response.readEntity(String.class) : null;
-            if (response.getStatusInfo().getFamily() ==  Response.Status.Family.SERVER_ERROR) {
+            if (response.getStatusInfo().getFamily() == Response.Status.Family.SERVER_ERROR) {
                 throw new ServerErrorException(message, response);
             } else {
                 throw new WebApplicationException(message, response);

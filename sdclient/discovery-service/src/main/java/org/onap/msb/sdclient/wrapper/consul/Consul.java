@@ -1,17 +1,15 @@
 /**
  * Copyright 2016-2017 ZTE, Inc. and others.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.onap.msb.sdclient.wrapper.consul;
 
@@ -52,38 +50,33 @@ public class Consul {
 
 
 
-
-    
     private final HealthClient healthClient;
 
 
     /**
      * Private constructor.
      *
-     * @param url     The full URL of a running Consul instance.
+     * @param url The full URL of a running Consul instance.
      * @param builder JAX-RS client builder instance.
      */
     private Consul(String url, ClientBuilder builder, ObjectMapper mapper) {
 
-        if (!FluentIterable.from(builder.getConfiguration().getClasses())
-                      .filter(new Predicate<Class<?>>() {
-                        @Override
-                        public boolean apply(final Class<?> clazz) {
-                            return JacksonJaxbJsonProvider.class.isAssignableFrom(clazz);
-                        }
-                    }).first().isPresent()) {
+        if (!FluentIterable.from(builder.getConfiguration().getClasses()).filter(new Predicate<Class<?>>() {
+            @Override
+            public boolean apply(final Class<?> clazz) {
+                return JacksonJaxbJsonProvider.class.isAssignableFrom(clazz);
+            }
+        }).first().isPresent()) {
             builder.register(JacksonJaxbJsonProvider.class);
         }
-        final Client client = builder
-                .register(new ObjectMapperContextResolver(mapper))
-                .build();
+        final Client client = builder.register(new ObjectMapperContextResolver(mapper)).build();
 
-     
+
         this.healthClient = new HealthClient(client.target(url).path("v1").path("health"));
 
-       
 
-//        agentClient.ping();
+
+        // agentClient.ping();
     }
 
     /**
@@ -91,7 +84,7 @@ public class Consul {
      *
      * @deprecated Use {@link Consul.Builder}
      *
-     * @param url     The Consul API URL.
+     * @param url The Consul API URL.
      * @param builder The JAX-RS client builder instance.
      * @return A new client.
      */
@@ -105,8 +98,8 @@ public class Consul {
      *
      * @deprecated Use {@link Consul.Builder}
      *
-     * @param host    The Consul API hostname or IP.
-     * @param port    The Consul port.
+     * @param host The Consul API hostname or IP.
+     * @param port The Consul port.
      * @param builder The JAX-RS client builder instance.
      * @return A new client.
      */
@@ -145,11 +138,12 @@ public class Consul {
         return newClient(DEFAULT_HTTP_HOST, DEFAULT_HTTP_PORT);
     }
 
-   
-    
+
+
     public HealthClient healthClient() {
         return healthClient;
     }
+
     /**
      * Creates a new {@link Builder} object.
      *

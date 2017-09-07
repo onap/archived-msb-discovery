@@ -1,17 +1,15 @@
 /**
  * Copyright 2016-2017 ZTE, Inc. and others.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.onap.msb.sdclient.wrapper.consul.model.health;
 
@@ -21,13 +19,13 @@ import com.google.common.base.Objects;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public  class ServiceHealth {
+public class ServiceHealth {
 
     @JsonProperty("Node")
-    public  Node node;
+    public Node node;
 
     @JsonProperty("Service")
-    public  Service service;
+    public Service service;
 
     public Node getNode() {
         return node;
@@ -44,27 +42,24 @@ public  class ServiceHealth {
     public void setService(Service service) {
         this.service = service;
     }
-    
+
     @Override
-    public boolean equals(Object other)
-    {
-        if(this == other)
+    public boolean equals(Object other) {
+        if (this == other)
             return true;
-        if(other instanceof ServiceHealth)
-        {
-            ServiceHealth that = (ServiceHealth)other;
+        if (other instanceof ServiceHealth) {
+            ServiceHealth that = (ServiceHealth) other;
             return Objects.equal(node, that.node) && Objects.equal(service, that.service);
-        } else
-        {
+        } else {
             return false;
         }
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hashCode(node, service);
     }
 
-   
-    
+
+
 }

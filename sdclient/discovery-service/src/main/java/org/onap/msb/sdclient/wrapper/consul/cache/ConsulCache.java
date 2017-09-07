@@ -1,29 +1,19 @@
 /**
  * Copyright 2016-2017 ZTE, Inc. and others.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.onap.msb.sdclient.wrapper.consul.cache;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
-
-import org.onap.msb.sdclient.wrapper.consul.async.ConsulResponseCallback;
-import org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse;
-import org.onap.msb.sdclient.wrapper.consul.option.QueryOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.math.BigInteger;
 import java.util.HashSet;
@@ -37,22 +27,32 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.google.common.base.Preconditions.checkState;
+import org.onap.msb.sdclient.wrapper.consul.async.ConsulResponseCallback;
+import org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse;
+import org.onap.msb.sdclient.wrapper.consul.option.QueryOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
 
 /**
- * A cache structure that can provide an up-to-date read-only
- * map backed by consul data
+ * A cache structure that can provide an up-to-date read-only map backed by consul data
  *
  * @param <V>
  */
 public class ConsulCache<K, V> {
 
-    enum State {latent, starting, started, stopped }
+    enum State {
+        latent, starting, started, stopped
+    }
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ConsulCache.class);
 
     private final AtomicReference<BigInteger> latestIndex = new AtomicReference<BigInteger>(null);
-    private final AtomicReference<ImmutableMap<K, V>> lastResponse = new AtomicReference<ImmutableMap<K, V>>(ImmutableMap.<K, V>of());
+    private final AtomicReference<ImmutableMap<K, V>> lastResponse =
+                    new AtomicReference<ImmutableMap<K, V>>(ImmutableMap.<K, V>of());
     private final AtomicReference<State> state = new AtomicReference<State>(State.latent);
     private final CountDownLatch initLatch = new CountDownLatch(1);
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -62,17 +62,12 @@ public class ConsulCache<K, V> {
     private final CallbackConsumer<V> callBackConsumer;
     private final ConsulResponseCallback<List<V>> responseCallback;
 
-    ConsulCache(
-            Function<V, K> keyConversion,
-            CallbackConsumer<V> callbackConsumer) {
+    ConsulCache(Function<V, K> keyConversion, CallbackConsumer<V> callbackConsumer) {
         this(keyConversion, callbackConsumer, 10, TimeUnit.SECONDS);
     }
 
-    ConsulCache(
-            Function<V, K> keyConversion,
-            CallbackConsumer<V> callbackConsumer,
-            final long backoffDelayQty,
-            final TimeUnit backoffDelayUnit) {
+    ConsulCache(Function<V, K> keyConversion, CallbackConsumer<V> callbackConsumer, final long backoffDelayQty,
+                    final TimeUnit backoffDelayUnit) {
 
         this.keyConversion = keyConversion;
         this.callBackConsumer = callbackConsumer;
@@ -88,7 +83,7 @@ public class ConsulCache<K, V> {
                 ImmutableMap<K, V> full = convertToMap(consulResponse);
 
                 boolean changed = !full.equals(lastResponse.get());
-//                LOGGER.info("node changed:"+changed+"----"+full);
+                // LOGGER.info("node changed:"+changed+"----"+full);
                 if (changed) {
                     // changes
                     lastResponse.set(full);
@@ -112,7 +107,8 @@ public class ConsulCache<K, V> {
                 if (!isRunning()) {
                     return;
                 }
-                LOGGER.error(String.format("Error getting response from consul. will retry in %d %s", backoffDelayQty, backoffDelayUnit), throwable);
+                LOGGER.error(String.format("Error getting response from consul. will retry in %d %s", backoffDelayQty,
+                                backoffDelayUnit), throwable);
 
                 executorService.schedule(new Runnable() {
                     @Override
@@ -125,7 +121,8 @@ public class ConsulCache<K, V> {
     }
 
     public void start() throws Exception {
-        checkState(state.compareAndSet(State.latent, State.starting),"Cannot transition from state %s to %s", state.get(), State.starting);
+        checkState(state.compareAndSet(State.latent, State.starting), "Cannot transition from state %s to %s",
+                        state.get(), State.starting);
         runCallback();
     }
 
@@ -169,7 +166,8 @@ public class ConsulCache<K, V> {
                     builder.put(key, v);
                 } else {
                     System.out.println(key.toString());
-                    LOGGER.warn("Duplicate service encountered. May differ by tags. Try using more specific tags? " + key.toString());
+                    LOGGER.warn("Duplicate service encountered. May differ by tags. Try using more specific tags? "
+                                    + key.toString());
                 }
             }
             keySet.add(key);
@@ -201,8 +199,7 @@ public class ConsulCache<K, V> {
     }
 
     /**
-     * Implementers can register a listener to receive
-     * a new map when it changes
+     * Implementers can register a listener to receive a new map when it changes
      *
      * @param <V>
      */

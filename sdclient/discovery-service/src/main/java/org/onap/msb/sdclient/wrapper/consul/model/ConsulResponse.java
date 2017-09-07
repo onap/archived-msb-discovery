@@ -1,23 +1,21 @@
 /**
  * Copyright 2016-2017 ZTE, Inc. and others.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.onap.msb.sdclient.wrapper.consul.model;
 
-import com.google.common.base.Objects;
-
 import java.math.BigInteger;
+
+import com.google.common.base.Objects;
 
 public class ConsulResponse<T> {
 
@@ -51,25 +49,21 @@ public class ConsulResponse<T> {
 
     @Override
     public String toString() {
-        return "ConsulResponse{" +
-                "response=" + response +
-                ", lastContact=" + lastContact +
-                ", knownLeader=" + knownLeader +
-                ", index=" + index +
-                '}';
+        return "ConsulResponse{" + "response=" + response + ", lastContact=" + lastContact + ", knownLeader="
+                        + knownLeader + ", index=" + index + '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         ConsulResponse that = (ConsulResponse) o;
 
-        return Objects.equal(this.response, that.response) &&
-                Objects.equal(this.lastContact, that.lastContact) &&
-                Objects.equal(this.knownLeader, that.knownLeader) &&
-                Objects.equal(this.index, that.index);
+        return Objects.equal(this.response, that.response) && Objects.equal(this.lastContact, that.lastContact)
+                        && Objects.equal(this.knownLeader, that.knownLeader) && Objects.equal(this.index, that.index);
     }
 
     @Override

@@ -1,17 +1,15 @@
 /**
  * Copyright 2016-2017 ZTE, Inc. and others.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.onap.msb.sdclient.wrapper.consul;
 
@@ -35,8 +33,8 @@ public class HealthClient {
 
 
     private static final GenericType<List<ServiceHealth>> TYPE_SERVICE_HEALTH_LIST =
-            new GenericType<List<ServiceHealth>>() {};
-            
+                    new GenericType<List<ServiceHealth>>() {};
+
     private final WebTarget webTarget;
 
     /**
@@ -48,7 +46,7 @@ public class HealthClient {
         this.webTarget = webTarget;
     }
 
-   
+
 
     /**
      * Retrieves the healthchecks for all healthy service instances.
@@ -56,8 +54,8 @@ public class HealthClient {
      * GET /v1/health/service/{service}?passing
      *
      * @param service The service to query.
-     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list of
-     * {@link com.orbitz.consul.model.health.HealthCheck} objects.
+     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list
+     *         of {@link com.orbitz.consul.model.health.HealthCheck} objects.
      */
     public ConsulResponse<List<ServiceHealth>> getHealthyServiceInstances(String service) {
         return getHealthyServiceInstances(service, null, QueryOptions.BLANK);
@@ -68,24 +66,26 @@ public class HealthClient {
      * 
      * GET /v1/health/service/{service}?dc={datacenter}&amp;passing
      *
-     * @param service        The service to query.
+     * @param service The service to query.
      * @param catalogOptions The catalog specific options to use.
-     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list of
-     * {@link com.orbitz.consul.model.health.HealthCheck} objects.
+     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list
+     *         of {@link com.orbitz.consul.model.health.HealthCheck} objects.
      */
-    public ConsulResponse<List<ServiceHealth>> getHealthyServiceInstances(String service, CatalogOptions catalogOptions) {
+    public ConsulResponse<List<ServiceHealth>> getHealthyServiceInstances(String service,
+                    CatalogOptions catalogOptions) {
         return getHealthyServiceInstances(service, catalogOptions, QueryOptions.BLANK);
     }
 
     /**
-     * Retrieves the healthchecks for all healthy service instances with {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}.
+     * Retrieves the healthchecks for all healthy service instances with
+     * {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}.
      * 
      * GET /v1/health/service/{service}?passing
      *
-     * @param service      The service to query.
+     * @param service The service to query.
      * @param queryOptions The Query Options to use.
-     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list of
-     * {@link com.orbitz.consul.model.health.HealthCheck} objects.
+     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list
+     *         of {@link com.orbitz.consul.model.health.HealthCheck} objects.
      */
     public ConsulResponse<List<ServiceHealth>> getHealthyServiceInstances(String service, QueryOptions queryOptions) {
         return getHealthyServiceInstances(service, null, queryOptions);
@@ -97,16 +97,16 @@ public class HealthClient {
      * 
      * GET /v1/health/service/{service}?dc={datacenter}&amp;passing
      *
-     * @param service        The service to query.
+     * @param service The service to query.
      * @param catalogOptions The catalog specific options to use.
-     * @param queryOptions   The Query Options to use.
-     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list of
-     * {@link com.orbitz.consul.model.health.HealthCheck} objects.
+     * @param queryOptions The Query Options to use.
+     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list
+     *         of {@link com.orbitz.consul.model.health.HealthCheck} objects.
      */
     public ConsulResponse<List<ServiceHealth>> getHealthyServiceInstances(String service, CatalogOptions catalogOptions,
-                                                                          QueryOptions queryOptions) {
-        return response(webTarget.path("service").path(service).queryParam("passing", "true"),
-                catalogOptions, queryOptions, TYPE_SERVICE_HEALTH_LIST);
+                    QueryOptions queryOptions) {
+        return response(webTarget.path("service").path(service).queryParam("passing", "true"), catalogOptions,
+                        queryOptions, TYPE_SERVICE_HEALTH_LIST);
     }
 
     /**
@@ -117,16 +117,15 @@ public class HealthClient {
      * 
      * Experimental.
      *
-     * @param service        The service to query.
+     * @param service The service to query.
      * @param catalogOptions The catalog specific options to use.
-     * @param queryOptions   The Query Options to use.
-     * @param callback       Callback implemented by callee to handle results.
+     * @param queryOptions The Query Options to use.
+     * @param callback Callback implemented by callee to handle results.
      */
-    public void getHealthyServiceInstances(String service, CatalogOptions catalogOptions,
-                                           QueryOptions queryOptions,
-                                           ConsulResponseCallback<List<ServiceHealth>> callback) {
-        response(webTarget.path("service").path(service).queryParam("passing", "true"),
-                catalogOptions, queryOptions, TYPE_SERVICE_HEALTH_LIST, callback);
+    public void getHealthyServiceInstances(String service, CatalogOptions catalogOptions, QueryOptions queryOptions,
+                    ConsulResponseCallback<List<ServiceHealth>> callback) {
+        response(webTarget.path("service").path(service).queryParam("passing", "true"), catalogOptions, queryOptions,
+                        TYPE_SERVICE_HEALTH_LIST, callback);
     }
 
     /**
@@ -137,14 +136,14 @@ public class HealthClient {
      * 
      * Experimental.
      *
-     * @param service      The service to query.
+     * @param service The service to query.
      * @param queryOptions The Query Options to use.
-     * @param callback     Callback implemented by callee to handle results.
+     * @param callback Callback implemented by callee to handle results.
      */
     public void getHealthyServiceInstances(String service, QueryOptions queryOptions,
-                                           ConsulResponseCallback<List<ServiceHealth>> callback) {
-        response(webTarget.path("service").path(service).queryParam("passing", "true"),
-                CatalogOptions.BLANK, queryOptions, TYPE_SERVICE_HEALTH_LIST, callback);
+                    ConsulResponseCallback<List<ServiceHealth>> callback) {
+        response(webTarget.path("service").path(service).queryParam("passing", "true"), CatalogOptions.BLANK,
+                        queryOptions, TYPE_SERVICE_HEALTH_LIST, callback);
     }
 
     /**
@@ -153,8 +152,8 @@ public class HealthClient {
      * GET /v1/health/service/{service}
      *
      * @param service The service to query.
-     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list of
-     * {@link com.orbitz.consul.model.health.HealthCheck} objects.
+     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list
+     *         of {@link com.orbitz.consul.model.health.HealthCheck} objects.
      */
     public ConsulResponse<List<ServiceHealth>> getAllServiceInstances(String service) {
         return getAllServiceInstances(service, null, QueryOptions.BLANK);
@@ -165,24 +164,25 @@ public class HealthClient {
      * 
      * GET /v1/health/service/{service}?dc={datacenter}
      *
-     * @param service        The service to query.
+     * @param service The service to query.
      * @param catalogOptions The catalog specific options to use.
-     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list of
-     * {@link com.orbitz.consul.model.health.HealthCheck} objects.
+     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list
+     *         of {@link com.orbitz.consul.model.health.HealthCheck} objects.
      */
     public ConsulResponse<List<ServiceHealth>> getAllServiceInstances(String service, CatalogOptions catalogOptions) {
         return getAllServiceInstances(service, catalogOptions, QueryOptions.BLANK);
     }
 
     /**
-     * Retrieves the healthchecks for all nodes with {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}.
+     * Retrieves the healthchecks for all nodes with
+     * {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}.
      * 
      * GET /v1/health/service/{service}
      *
-     * @param service      The service to query.
+     * @param service The service to query.
      * @param queryOptions The Query Options to use.
-     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list of
-     * {@link com.orbitz.consul.model.health.HealthCheck} objects.
+     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list
+     *         of {@link com.orbitz.consul.model.health.HealthCheck} objects.
      */
     public ConsulResponse<List<ServiceHealth>> getAllServiceInstances(String service, QueryOptions queryOptions) {
         return getAllServiceInstances(service, null, queryOptions);
@@ -194,53 +194,52 @@ public class HealthClient {
      * 
      * GET /v1/health/service/{service}?dc={datacenter}
      *
-     * @param service        The service to query.
+     * @param service The service to query.
      * @param catalogOptions The catalog specific options to use.
-     * @param queryOptions   The Query Options to use.
-     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list of
-     * {@link com.orbitz.consul.model.health.HealthCheck} objects.
+     * @param queryOptions The Query Options to use.
+     * @return A {@link org.onap.msb.sdclient.wrapper.consul.model.ConsulResponse} containing a list
+     *         of {@link com.orbitz.consul.model.health.HealthCheck} objects.
      */
     public ConsulResponse<List<ServiceHealth>> getAllServiceInstances(String service, CatalogOptions catalogOptions,
-                                                                      QueryOptions queryOptions) {
+                    QueryOptions queryOptions) {
         return response(webTarget.path("service").path(service), catalogOptions, queryOptions,
-                TYPE_SERVICE_HEALTH_LIST);
+                        TYPE_SERVICE_HEALTH_LIST);
     }
 
     /**
-     * Asynchronously retrieves the healthchecks for all nodes in a given
-     * datacenter with {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}.
+     * Asynchronously retrieves the healthchecks for all nodes in a given datacenter with
+     * {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}.
      * 
      * GET /v1/health/service/{service}?dc={datacenter}
      * 
      * Experimental.
      *
-     * @param service        The service to query.
+     * @param service The service to query.
      * @param catalogOptions The catalog specific options to use.
-     * @param queryOptions   The Query Options to use.
-     * @param callback       Callback implemented by callee to handle results.
+     * @param queryOptions The Query Options to use.
+     * @param callback Callback implemented by callee to handle results.
      */
-    public void getAllServiceInstances(String service, CatalogOptions catalogOptions,
-                                       QueryOptions queryOptions,
-                                       ConsulResponseCallback<List<ServiceHealth>> callback) {
-        response(webTarget.path("service").path(service), catalogOptions, queryOptions,
-                TYPE_SERVICE_HEALTH_LIST, callback);
+    public void getAllServiceInstances(String service, CatalogOptions catalogOptions, QueryOptions queryOptions,
+                    ConsulResponseCallback<List<ServiceHealth>> callback) {
+        response(webTarget.path("service").path(service), catalogOptions, queryOptions, TYPE_SERVICE_HEALTH_LIST,
+                        callback);
     }
 
     /**
-     * Asynchronously retrieves the healthchecks for all nodes in a given
-     * datacenter with {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}.
+     * Asynchronously retrieves the healthchecks for all nodes in a given datacenter with
+     * {@link org.onap.msb.sdclient.wrapper.consul.option.QueryOptions}.
      * 
      * GET /v1/health/service/{service}?dc={datacenter}
      * 
      * Experimental.
      *
-     * @param service      The service to query.
+     * @param service The service to query.
      * @param queryOptions The Query Options to use.
-     * @param callback     Callback implemented by callee to handle results.
+     * @param callback Callback implemented by callee to handle results.
      */
     public void getAllServiceInstances(String service, QueryOptions queryOptions,
-                                       ConsulResponseCallback<List<ServiceHealth>> callback) {
-        response(webTarget.path("service").path(service), CatalogOptions.BLANK,
-                queryOptions, TYPE_SERVICE_HEALTH_LIST, callback);
+                    ConsulResponseCallback<List<ServiceHealth>> callback) {
+        response(webTarget.path("service").path(service), CatalogOptions.BLANK, queryOptions, TYPE_SERVICE_HEALTH_LIST,
+                        callback);
     }
 }

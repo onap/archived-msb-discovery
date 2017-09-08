@@ -28,7 +28,7 @@
   <artifactId>msb-discovery-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>onap/msb/msb-discovery-parent</name> 
+  <name>msb-discovery</name> 
 
   <properties>
 

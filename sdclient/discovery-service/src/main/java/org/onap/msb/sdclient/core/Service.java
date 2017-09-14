@@ -27,7 +27,7 @@ public class Service<T> implements Serializable {
     private static final long serialVersionUID = 1L;
     // 服务名
     @ApiModelProperty(example = "test", required = true)
-    private String serviceName;
+    private String serviceName = "";
     // 版本号
     @ApiModelProperty(example = "v1", required = true)
     private String version = "";
@@ -65,6 +65,8 @@ public class Service<T> implements Serializable {
     @ApiModelProperty(hidden = true)
     private String path = "";
 
+    @ApiModelProperty(value = "enable ssl", allowableValues = "true,false", example = "false")
+    private boolean enable_ssl = false; // true:https:开启SSL加密, false:http
 
 
     @ApiModelProperty(required = true)
@@ -192,5 +194,13 @@ public class Service<T> implements Serializable {
 
     public void setNetwork_plane_type(String network_plane_type) {
         this.network_plane_type = network_plane_type;
+    }
+
+    public boolean isEnable_ssl() {
+        return enable_ssl;
+    }
+
+    public void setEnable_ssl(boolean enable_ssl) {
+        this.enable_ssl = enable_ssl;
     }
 }

@@ -298,7 +298,7 @@ public class ConsulServiceWrapper {
 
                 String ms_url = "", ms_version = "", ms_protocol = "", ms_status = "", ms_publish_port = "",
                                 ms_is_manual = "", ms_visualRange = "1", ms_network_plane_type = "", ms_lb_policy = "",
-                                ms_host = "", ms_path = "";
+                                ms_host = "", ms_path = "", ms_enable_ssl = "";
                 List<KeyVaulePair> ms_metadata = new ArrayList<KeyVaulePair>();
 
                 List<String> nodeLabels = new ArrayList<String>();
@@ -327,13 +327,15 @@ public class ConsulServiceWrapper {
                             ms_protocol = (baseMap.get("protocol") == null ? "" : baseMap.get("protocol"));
                             ms_status = (baseMap.get("status") == null ? "1" : baseMap.get("status"));
 
+                            if (baseMap.get("enable_ssl") != null) {
+                                ms_enable_ssl = (baseMap.get("enable_ssl"));
+                            }
                             if (baseMap.get("publish_port") != null) {
                                 ms_publish_port = (baseMap.get("publish_port"));
                             }
 
                             if (baseMap.get("is_manual") != null) {
                                 ms_is_manual = baseMap.get("is_manual");
-
                             }
 
                             if (baseMap.get("ha_role") != null) {
@@ -528,6 +530,7 @@ public class ConsulServiceWrapper {
                 microServiceInfo.setNamespace(namespace);
                 microServiceInfo.setHost(ms_host);
                 microServiceInfo.setPath(ms_path);
+                microServiceInfo.setEnable_ssl(Boolean.parseBoolean(ms_enable_ssl));
             }
 
 
@@ -637,6 +640,7 @@ public class ConsulServiceWrapper {
 
                 baseMap.put("status", "1");
                 baseMap.put("is_manual", Boolean.toString(is_manual));
+                baseMap.put("enable_ssl", Boolean.toString(microServiceInfo.isEnable_ssl()));
 
                 // TCP和UDP协议保存 nginx端口和负载均衡策略
                 if (StringUtils.isNotBlank(microServiceInfo.getPublish_port())) {
@@ -1333,7 +1337,7 @@ public class ConsulServiceWrapper {
 
                 String ms_url = "", ms_version = "", ms_protocol = "", ms_status = "", ms_publish_port = "",
                                 ms_is_manual = "", ms_visualRange = "1", ms_network_plane_type = "", ms_lb_policy = "",
-                                ms_host = "", ms_path = "";
+                                ms_host = "", ms_path = "", ms_enable_ssl = "";
                 List<KeyVaulePair> ms_metadata = new ArrayList<KeyVaulePair>();
 
                 List<String> nodeLabels = new ArrayList<String>();
@@ -1381,6 +1385,10 @@ public class ConsulServiceWrapper {
 
                             if (baseMap.get("path") != null) {
                                 ms_path = baseMap.get("path");
+                            }
+
+                            if (baseMap.get("enable_ssl") != null) {
+                                ms_publish_port = (baseMap.get("enable_ssl"));
                             }
 
                             continue;
@@ -1554,6 +1562,7 @@ public class ConsulServiceWrapper {
                 microServiceInfo.setLb_policy(ms_lb_policy);
                 microServiceInfo.setHost(ms_host);
                 microServiceInfo.setPath(ms_path);
+                microServiceInfo.setEnable_ssl(Boolean.parseBoolean(ms_enable_ssl));
 
                 microServiceInfo.setMetadata(ms_metadata);
                 microServiceInfo.setNamespace(namespace);
@@ -1903,7 +1912,4 @@ public class ConsulServiceWrapper {
             }
         }
     }
-
-
-
 }

@@ -6,6 +6,7 @@ target/
 release/
 .vagrant
 /archives/
+.checkstyle
 *.jar
 *.zip
 *.tar

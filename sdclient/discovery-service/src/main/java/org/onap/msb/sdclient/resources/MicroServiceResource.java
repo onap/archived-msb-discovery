@@ -105,7 +105,7 @@ public class MicroServiceResource {
                                     required = false) @QueryParam("createOrUpdate") @DefaultValue("true") boolean createOrUpdate,
                     @ApiParam(value = "is_manual",
                                     required = false) @QueryParam("is_manual") @DefaultValue("false") boolean is_manual) {
-
+        LOGGER.error("**** json string:" + microServiceInfo);
         String ip = DiscoverUtil.getRealIp(request);
 
         try {

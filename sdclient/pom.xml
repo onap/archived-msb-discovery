@@ -23,12 +23,12 @@
 	<parent>
 	  <groupId>org.onap.msb.discovery</groupId>
 	  <artifactId>msb-discovery-parent</artifactId>
-	  <version>1.0.0-SNAPSHOT</version>
+	  <version>1.0.1-SNAPSHOT</version>
 	</parent>
 
   	<groupId>org.onap.msb.discovery</groupId>
 	<artifactId>sdclient</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>onap/msb/discovery/sdclient</name>
 	<packaging>pom</packaging>
 	

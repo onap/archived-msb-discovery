@@ -28,6 +28,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
+import java.util.Optional;
 
 public class DiscoverApp extends Application<DiscoverAppConfig> {
 
@@ -91,7 +92,10 @@ public class DiscoverApp extends Application<DiscoverAppConfig> {
         SimpleServerFactory simpleServerFactory = (SimpleServerFactory) configuration.getServerFactory();
         // 必须以"/"开头，结尾可有可无"/"
         String basePath = simpleServerFactory.getApplicationContextPath();
-        String rootPath = simpleServerFactory.getJerseyRootPath();
+
+        Optional<String> optRootPath = simpleServerFactory.getJerseyRootPath();
+
+        String rootPath = optRootPath.get();        
 
         rootPath = rootPath.substring(0, rootPath.indexOf("/*"));
 

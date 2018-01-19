@@ -66,6 +66,8 @@ public class Consul {
             public boolean apply(final Class<?> clazz) {
                 return JacksonJaxbJsonProvider.class.isAssignableFrom(clazz);
             }
+
+
         }).first().isPresent()) {
             builder.register(JacksonJaxbJsonProvider.class);
         }
@@ -197,7 +199,7 @@ public class Consul {
          */
         public Builder withHostAndPort(HostAndPort hostAndPort) {
             try {
-                this.url = new URL("http", hostAndPort.getHostText(), hostAndPort.getPort(), "");
+                this.url = new URL("http", hostAndPort.getHost(), hostAndPort.getPort(), "");
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }

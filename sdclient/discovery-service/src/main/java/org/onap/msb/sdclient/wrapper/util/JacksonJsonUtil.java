@@ -109,8 +109,7 @@ public class JacksonJsonUtil {
             vo = objectMapper.readValue(json, new TypeReference<List<CatalogService>>() {});
 
         } catch (Exception e) {
-            String errorMsg = " JsonTobean faild:" + e.getMessage();
-            logger.error(errorMsg);
+            logger.error(" JsonTobean faild:" + e.getMessage());
         }
         return vo;
     }
@@ -120,12 +119,10 @@ public class JacksonJsonUtil {
 
             ObjectMapper objectMapper = getMapperInstance();
 
-
             return objectMapper.readValue(json, valueTypeRef);
 
         } catch (Exception e) {
-            String errorMsg = " JsonTobean faild:" + e.getMessage();
-            logger.error(errorMsg);
+            logger.error(" JsonTobean faild:" + e.getMessage());
         }
         return null;
     }
@@ -150,19 +147,11 @@ public class JacksonJsonUtil {
             vo = objectMapper.readValue(json, new TypeReference<Map<String, String[]>>() {});
 
         } catch (Exception e) {
-            String errorMsg = " JsonTobean faild";
-            logger.error(errorMsg);
+            logger.error("JsonTobean faild");
         }
         return vo;
     }
 
-
-    public static void main(String[] args) {
-        String json = "[{\"Node\":{\"Node\":\"A23179111\",\"Address\":\"10.74.44.27\",\"CreateIndex\":3,\"ModifyIndex\":318},\"Service\":{\"ID\":\"oo_10.74.56.36_5656\",\"Service\":\"oo\",\"Tags\":[\"url:/root\",\"protocol:REST\",\"version:\",\"visualRange:0|1\",\"ttl:-1\",\"status:1\",\"lb_policy:client_custom\",\"lb_server_params:weight=1 max_fails=1 fail_timeout=16s\",\"checkType:TCP\",\"checkInterval:10\",\"checkUrl:10.56.23.63:8989\"],\"Address\":\"10.74.56.36\",\"Port\":5656,\"EnableTagOverride\":false,\"CreateIndex\":314,\"ModifyIndex\":318},\"Checks\":[{\"Node\":\"A23179111\",\"CheckID\":\"serfHealth\",\"Name\":\"Serf Health Status\",\"Status\":\"passing\",\"Notes\":\"\",\"Output\":\"Agent alive and reachable\",\"ServiceID\":\"\",\"ServiceName\":\"\",\"CreateIndex\":3,\"ModifyIndex\":3},{\"Node\":\"A23179111\",\"CheckID\":\"service:oo_10.74.56.36_5656\",\"Name\":\"Service 'oo' check\",\"Status\":\"critical\",\"Notes\":\"\",\"Output\":\"\",\"ServiceID\":\"oo_10.74.56.36_5656\",\"ServiceName\":\"oo\",\"CreateIndex\":314,\"ModifyIndex\":318}]},{\"Node\":{\"Node\":\"A23179111\",\"Address\":\"10.74.44.27\",\"CreateIndex\":3,\"ModifyIndex\":318},\"Service\":{\"ID\":\"oo_10.78.36.36_111\",\"Service\":\"oo\",\"Tags\":[\"url:/root\",\"protocol:REST\",\"version:\",\"visualRange:0|1\",\"ttl:-1\",\"status:1\",\"lb_policy:client_custom\"],\"Address\":\"10.78.36.36\",\"Port\":111,\"EnableTagOverride\":false,\"CreateIndex\":315,\"ModifyIndex\":315},\"Checks\":[{\"Node\":\"A23179111\",\"CheckID\":\"serfHealth\",\"Name\":\"Serf Health Status\",\"Status\":\"passing\",\"Notes\":\"\",\"Output\":\"Agent alive and reachable\",\"ServiceID\":\"\",\"ServiceName\":\"\",\"CreateIndex\":3,\"ModifyIndex\":3}]}]";
-        List<HealthService> list = jsonToListBean(json, new TypeReference<List<HealthService>>() {});
-        System.out.println(list);
-
-    }
 
 
 

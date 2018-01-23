@@ -129,57 +129,7 @@ public final class ImmutableNode extends Node {
         return MoreObjects.toStringHelper("Node").add("node", node).add("address", address).toString();
     }
 
-    /**
-     * Utility type used to correctly read immutable object from JSON representation.
-     * 
-     * @deprecated Do not use this type directly, it exists only for the <em>Jackson</em>-binding
-     *             infrastructure
-     */
-    @Deprecated
-    @JsonDeserialize
-    static final class Json extends Node {
-        String node;
-        String address;
-
-        @JsonProperty(value = "Node")
-        public void setNode(String node) {
-            this.node = node;
-        }
-
-        @JsonProperty(value = "Address")
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        @Override
-        public String getNode() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public String getAddress() {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    /**
-     * @param json A JSON-bindable data structure
-     * @return An immutable value type
-     * @deprecated Do not use this method directly, it exists only for the <em>Jackson</em>-binding
-     *             infrastructure
-     */
-    @Deprecated
-    @JsonCreator
-    static ImmutableNode fromJson(Json json) {
-        ImmutableNode.Builder builder = ImmutableNode.builder();
-        if (json.node != null) {
-            builder.node(json.node);
-        }
-        if (json.address != null) {
-            builder.address(json.address);
-        }
-        return builder.build();
-    }
+    
 
     /**
      * Creates an immutable copy of a {@link Node} value. Uses accessors to get values to initialize

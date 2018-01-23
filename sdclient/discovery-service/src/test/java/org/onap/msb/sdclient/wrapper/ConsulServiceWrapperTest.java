@@ -15,6 +15,7 @@
 package org.onap.msb.sdclient.wrapper;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +24,9 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.onap.msb.sdclient.DiscoverAppConfig;
 import org.onap.msb.sdclient.core.ConsulResponse;
+import org.onap.msb.sdclient.core.KeyVaulePair;
 import org.onap.msb.sdclient.core.MicroServiceFullInfo;
 import org.onap.msb.sdclient.core.MicroServiceInfo;
 import org.onap.msb.sdclient.core.Node;
@@ -31,13 +34,14 @@ import org.onap.msb.sdclient.core.NodeAddress;
 import org.onap.msb.sdclient.core.NodeInfo;
 import org.onap.msb.sdclient.core.exception.ExtendedNotFoundException;
 import org.onap.msb.sdclient.core.exception.UnprocessableEntityException;
+import org.onap.msb.sdclient.wrapper.util.ConfigUtil;
 import org.onap.msb.sdclient.wrapper.util.HttpClientUtil;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpClientUtil.class})
+@PrepareForTest({HttpClientUtil.class,ConfigUtil.class,DiscoverAppConfig.class})
 public class ConsulServiceWrapperTest {
 
     private static final String restJson =
@@ -50,11 +54,27 @@ public class ConsulServiceWrapperTest {
     private static final String mockPostUrl = "http://127.0.0.1:8500/v1/catalog/register";
     private static final String mockdel_gettUrl = "http://127.0.0.1:8500/v1/catalog/service/test";
     private static final String mockdeltUrl = "http://127.0.0.1:8500/v1/catalog/deregister";
-
+    private static final String mockdeltUrl4agent = "http://127.0.0.1:8500/v1/agent/deregister";
+   
+    private static final String mockgetListUrl = "http://127.0.0.1:8500/v1/catalog/services";
+    private static final String restListJson =
+    "{\"consul\":[],\"test-tt\":[\"\\\"labels\\\":{\\\"visualRange\\\":\\\"0\\\"}\",\"\\\"base\\\":{\\\"version\\\":\\\"v1\\\",\\\"protocol\\\":\\\"REST\\\",\\\"url\\\":\\\"/api/microservices/v1\\\",\\\"visualRange\\\":\\\"0\\\"}\",\"\\\"ns\\\":{\\\"namespace\\\":\\\"tt\\\"}\"]}";
 
 
     private static ConsulServiceWrapper consulServiceWrapper = ConsulServiceWrapper.getInstance();
 
+    
+    @Test
+    public void test_getAllMicroServiceInstances(){
+    	mockGetList();
+    	List<MicroServiceFullInfo> serviceList=consulServiceWrapper.getAllMicroServiceInstances();
+    	Assert.assertEquals(1, serviceList.size());
+    	MicroServiceFullInfo service=serviceList.get(0);
+    	Assert.assertEquals( "test-tt",service.getServiceName());
+    	Assert.assertEquals( "",service.getNamespace());
+    }
+    
+    
     @Test
     public void test_getMicroServiceInstance() {
         mockGetRest();
@@ -77,13 +97,37 @@ public class ConsulServiceWrapperTest {
         MicroServiceInfo serviceInfo = new MicroServiceInfo();
         serviceInfo.setServiceName("test");
         serviceInfo.setVersion("v1");
+        serviceInfo.setNamespace("ns");
+        serviceInfo.setPublish_port("8086");
         serviceInfo.setUrl("/api/test/v1");
         serviceInfo.setProtocol("REST");
         serviceInfo.setVisualRange("1");
+        serviceInfo.setLb_policy("ip_hash");
+        serviceInfo.setHost("host");
+        serviceInfo.setPath("/test");
+        serviceInfo.setNetwork_plane_type("net");
+        
+        List<KeyVaulePair> metadata=new ArrayList<KeyVaulePair>();
+        metadata.add(new KeyVaulePair("key1","val1"));
+        metadata.add(new KeyVaulePair("key2","val2"));
+        serviceInfo.setMetadata(metadata);
+       
+        
+        List<String> labels=new ArrayList<String>();
+        labels.add("111:111");
+        labels.add("222:222");        
+        serviceInfo.setLabels(labels);
+        
         Set<Node> nodes = new HashSet<Node>();
         Node node = new Node();
         node.setIp("10.74.44.1");
         node.setPort("10080");
+        node.setLb_server_params("weight=1,max_fails=5,fail_timeout=8");
+        node.setHa_role("active");
+        node.setCheckType("HTTP");
+        node.setCheckInterval("10");
+        node.setCheckTimeOut("10");
+        node.setCheckUrl("http://check");
         nodes.add(node);
         serviceInfo.setNodes(nodes);
 
@@ -95,6 +139,88 @@ public class ConsulServiceWrapperTest {
             Assert.assertEquals("HTTP 500 Internal Server Error", e.getMessage());
         }
     }
+    
+    
+    @Test
+    public void test_saveMicroServiceInstance2() {
+        MicroServiceInfo serviceInfo = new MicroServiceInfo();
+        serviceInfo.setServiceName("test");
+        serviceInfo.setVersion("v1");
+        serviceInfo.setNamespace("ns");
+        serviceInfo.setPublish_port("28005");
+        serviceInfo.setUrl("/api/test/v1");
+        serviceInfo.setProtocol("TCP");
+        serviceInfo.setVisualRange("1");
+        serviceInfo.setLb_policy("ip_hash");
+        serviceInfo.setHost("host");
+        serviceInfo.setPath("/test");
+        serviceInfo.setNetwork_plane_type("net");
+        
+        List<KeyVaulePair> metadata=new ArrayList<KeyVaulePair>();
+        metadata.add(new KeyVaulePair("key1","val1"));
+        metadata.add(new KeyVaulePair("key2","val2"));
+        serviceInfo.setMetadata(metadata);
+       
+        
+        List<String> labels=new ArrayList<String>();
+        labels.add("111:111");
+        labels.add("222:222");        
+        serviceInfo.setLabels(labels);
+        
+        Set<Node> nodes = new HashSet<Node>();
+        Node node = new Node();
+        node.setIp("10.74.44.1");
+        node.setPort("28005");
+        node.setLb_server_params("weight=1,max_fails=5,fail_timeout=8");
+        node.setHa_role("active");
+        node.setCheckType("TCP");
+        node.setCheckInterval("10");
+        node.setCheckTimeOut("10");
+        node.setCheckUrl("tcp://check");
+        nodes.add(node);
+        serviceInfo.setNodes(nodes);
+
+        mockGetRest4null();
+        // mockGetPost();
+        try {
+            consulServiceWrapper.saveMicroServiceInstance(serviceInfo, true, "127.0.0.1", true);
+        } catch (Exception e) {
+            Assert.assertEquals("HTTP 500 Internal Server Error", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void test_saveMicroServiceInstance4agent() {
+        MicroServiceInfo serviceInfo = new MicroServiceInfo();
+        serviceInfo.setServiceName("test");
+        serviceInfo.setVersion("v1");
+        serviceInfo.setUrl("/api/test/v1");
+        serviceInfo.setProtocol("REST");
+        serviceInfo.setVisualRange("1");
+        Set<Node> nodes = new HashSet<Node>();
+        Node node = new Node();
+        node.setIp("10.74.44.1");
+        node.setPort("10080");
+        nodes.add(node);
+        serviceInfo.setNodes(nodes);
+
+          PowerMockito.mockStatic(System.class);        
+	      PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("agent");
+	      DiscoverAppConfig discoverConfig=PowerMockito.mock(DiscoverAppConfig.class);
+	      ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
+	      
+	      
+        mockGetRest4null();
+        // mockGetPost();
+        try {
+            consulServiceWrapper.saveMicroServiceInstance(serviceInfo, true, "127.0.0.1", true);
+        } catch (Exception e) {
+            Assert.assertEquals("HTTP 500 Internal Server Error", e.getMessage());
+        }
+        
+        PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("catalog");
+	    ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
+    }
 
     @Test
     public void test_deleteMicroService() {
@@ -102,13 +228,31 @@ public class ConsulServiceWrapperTest {
         mockDelete();
         consulServiceWrapper.deleteMicroService("test", "v1", "");
     }
-
+    
     @Test
     public void test_deleteMicroServiceInstance() {
         mockGet4Delete();
         mockDelete();
         consulServiceWrapper.deleteMicroServiceInstance("test", "v1", "", "10.74.56.36", "5656");
     }
+    
+    @Test
+    public void test_deleteMicroService4agent() {
+        	mockGet4Delete();
+        	mockDelete4agent();
+        
+          DiscoverAppConfig discoverConfig=PowerMockito.mock(DiscoverAppConfig.class);
+          PowerMockito.mockStatic(System.class);        
+	      PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("agent");
+	      ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
+	      
+          consulServiceWrapper.deleteMicroService("test", "v1", "");
+          
+          PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("catalog");
+	      ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
+    }
+
+   
 
     @Test
     public void test_healthCheckbyTTL() {
@@ -131,6 +275,15 @@ public class ConsulServiceWrapperTest {
         PowerMockito.when(HttpClientUtil.httpGet(mockdel_gettUrl)).thenReturn(catalogJson);
 
     }
+    
+    private void mockGetList() {
+        PowerMockito.mockStatic(HttpClientUtil.class);
+        PowerMockito.when(HttpClientUtil.httpGet(mockgetListUrl)).thenReturn(restListJson);
+        
+        ConsulResponse<Object> consulResponse = new ConsulResponse(restJson, new BigInteger("1000"));
+        PowerMockito.when(HttpClientUtil.httpWaitGet("http://127.0.0.1:8500/v1/health/service/test-tt")).thenReturn(consulResponse);
+
+    }
 
     private void mockGet4healthCheck() {
         PowerMockito.mockStatic(HttpClientUtil.class);
@@ -147,6 +300,12 @@ public class ConsulServiceWrapperTest {
         PowerMockito.when(HttpClientUtil.httpPostWithJSON(mockdeltUrl, serviceJson)).thenReturn(200);
 
     }
+    
+    private void mockDelete4agent() {
+        PowerMockito.when(HttpClientUtil.httpPostWithJSON("http://127.0.0.1:8500/v1/agent/service/deregister/_test_10.74.56.36_5656", "")).thenReturn(200);
+
+    }
+
 
 
 

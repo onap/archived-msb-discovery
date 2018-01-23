@@ -1874,23 +1874,7 @@ public class ConsulServiceWrapper {
 
         }
 
-        // 检查同名不同协议注册
-        try {
-            List<MicroServiceFullInfo> serviceList = getMicroServiceForNodes(microServiceInfo.getServiceName(),
-                            microServiceInfo.getVersion(), false, "", microServiceInfo.getNamespace());
-            if (serviceList != null && serviceList.size() > 0) {
-                for (MicroServiceFullInfo service : serviceList) {
-                    if (!service.getProtocol().equalsIgnoreCase(microServiceInfo.getProtocol())) {
-                        throw new UnprocessableEntityException(
-                                        "register MicroServiceInfo FAIL:There is a same service ,but different protocol--"
-                                                        + service.getProtocol());
-                    }
-
-                }
-            }
-        } catch (ExtendedNotFoundException e) {
-            // LOGGER.info("register MicroServiceInfo CHECK ok for protocol:service is not fond");
-        }
+       
 
 
     }

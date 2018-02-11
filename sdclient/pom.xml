@@ -42,6 +42,7 @@
 		<slf4j.version>1.7.25</slf4j.version>
 		<logback.version>1.2.3</logback.version>
 		<h2.version>1.4.196</h2.version>
+		<jackson.version>2.9.4</jackson.version>
 		<!-- <swagger.version>1.5.17</swagger.version> -->
 	</properties>
 
@@ -707,6 +708,11 @@
 				<groupId>io.dropwizard</groupId>
 				<artifactId>dropwizard-http2</artifactId>
 				<version>${dropwizard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
 			</dependency>
 			<!-- <dependency> <groupId>io.swagger</groupId> <artifactId>swagger-jersey2-jaxrs</artifactId> 
 				<version>${swagger.version}</version> <scope>compile</scope> </dependency> -->

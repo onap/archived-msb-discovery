@@ -177,7 +177,18 @@ public class ConsulServiceWrapper {
             }
 
             String serviceName = consul_serviceName;
-            if (StringUtils.isNotBlank(namespace)) {
+            // Remove version and namespace from consul service name
+            // Consul_serviceName Format: serviceName-version-namespace
+            if (StringUtils.isNotBlank(version) && StringUtils.isNotBlank(namespace)) {
+                if (consul_serviceName.endsWith("-" + version + "-" + namespace)) {
+                    serviceName = consul_serviceName.substring(0,
+                                    consul_serviceName.length() - version.length() - namespace.length() - 2);
+                }
+            } else if (StringUtils.isNotBlank(version)) {
+                if (consul_serviceName.endsWith("-" + version)) {
+                    serviceName = consul_serviceName.substring(0, consul_serviceName.length() - version.length() - 1);
+                }
+            } else if (StringUtils.isNotBlank(namespace)) {
                 if (consul_serviceName.endsWith("-" + namespace)) {
                     serviceName = consul_serviceName.substring(0, consul_serviceName.length() - namespace.length() - 1);
                 }
@@ -226,7 +237,7 @@ public class ConsulServiceWrapper {
                             "get MicroServiceInfo FAIL: The label query parameter format is wrong (key:value)");
         }
 
-        String consul_serviceName = getServiceName4Consul(serviceName, namespace);
+        String consul_serviceName = getServiceName4Consul(serviceName, version, namespace);
 
         ConsulResponse consulResponse = getHealthServices(consul_serviceName, ifPassStatus, wait, index);
         if (consulResponse == null) {
@@ -620,8 +631,8 @@ public class ConsulServiceWrapper {
                     node.setIp(requestIP);
                 }
 
-                String serverId = microServiceInfo.getNamespace() + "_" + serviceName + "_" + node.getIp() + "_"
-                                + node.getPort();
+                String serverId = microServiceInfo.getNamespace() + "_" + microServiceInfo.getVersion() + "_"
+                                + serviceName + "_" + node.getIp() + "_" + node.getPort();
 
 
                 List<String> tags = new ArrayList<String>();
@@ -763,7 +774,8 @@ public class ConsulServiceWrapper {
                 agentService.setId(serverId);
                 agentService.setPort(Integer.parseInt(node.getPort()));
 
-                String consul_serviceName = getServiceName4Consul(serviceName, microServiceInfo.getNamespace());
+                String consul_serviceName = getServiceName4Consul(serviceName, microServiceInfo.getVersion(),
+                                microServiceInfo.getNamespace());
 
 
                 agentService.setName(consul_serviceName);
@@ -825,7 +837,7 @@ public class ConsulServiceWrapper {
         checkServiceNameAndVersion(serviceName, version);
 
 
-        String consul_serviceName = getServiceName4Consul(serviceName, namespace);
+        String consul_serviceName = getServiceName4Consul(serviceName, version, namespace);
 
         List<CatalogService> catalogServiceList = getConsulServices(consul_serviceName, version);
 
@@ -953,7 +965,7 @@ public class ConsulServiceWrapper {
                             "delete MicroServiceInfo FAIL:Port(" + port + ")is not a valid Port address");
         }
 
-        String consul_serviceName = getServiceName4Consul(serviceName, namespace);
+        String consul_serviceName = getServiceName4Consul(serviceName, version, namespace);
 
         List<CatalogService> catalogServiceList = getConsulServices(consul_serviceName, version);
 
@@ -1153,7 +1165,7 @@ public class ConsulServiceWrapper {
                             "healthCheck by TTL FAIL:Port(" + checkNode.getPort() + ")is not a valid Port address");
         }
 
-        String consul_serviceName = getServiceName4Consul(serviceName, namespace);
+        String consul_serviceName = getServiceName4Consul(serviceName, version, namespace);
 
         List<CatalogService> catalogServiceList = getConsulServices(consul_serviceName, version);
 
@@ -1289,7 +1301,7 @@ public class ConsulServiceWrapper {
         }
 
 
-        String consul_serviceName = getServiceName4Consul(serviceName, namespace);
+        String consul_serviceName = getServiceName4Consul(serviceName, version, namespace);
 
         ConsulResponse consulResponse = getHealthServices(consul_serviceName, ifPassStatus, "", "");
         if (consulResponse == null) {
@@ -1593,18 +1605,17 @@ public class ConsulServiceWrapper {
     }
 
 
-    private String getServiceName4Consul(String serviceName, String namespace) {
-        String consul_serviceName;
+    private String getServiceName4Consul(String serviceName, String version, String namespace) {
+        String consul_serviceName = serviceName;
+
+        if (StringUtils.isNotBlank(version)) {
+            consul_serviceName = consul_serviceName + "-" + version;
+        }
 
         if (StringUtils.isNotBlank(namespace)) {
-            // if (DiscoverUtil.APIGATEWAY_SERVINCE_DEFAULT.equals(namespace)) {
-            // consul_serviceName=serviceName;
-            // }else{
-            consul_serviceName = serviceName + "-" + namespace;
-            // }
-        } else {
-            consul_serviceName = serviceName;
+            consul_serviceName = consul_serviceName + "-" + namespace;
         }
+
         return consul_serviceName;
     }
 
@@ -1874,7 +1885,6 @@ public class ConsulServiceWrapper {
 
         }
 
-       
 
 
     }

@@ -41,7 +41,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpClientUtil.class,ConfigUtil.class,DiscoverAppConfig.class})
+@PrepareForTest({HttpClientUtil.class, ConfigUtil.class, DiscoverAppConfig.class})
 public class ConsulServiceWrapperTest {
 
     private static final String restJson =
@@ -50,31 +50,31 @@ public class ConsulServiceWrapperTest {
                     "[{\"Node\":\"server\",\"Address\":\"127.0.0.1\",\"TaggedAddresses\":{\"lan\":\"127.0.0.1\",\"wan\":\"127.0.0.1\"},\"ServiceID\":\"_test_10.74.56.36_5656\",\"ServiceName\":\"test\",\"ServiceTags\":[\"\\\"base\\\":{\\\"protocol\\\":\\\"REST\\\",\\\"version\\\":\\\"v1\\\",\\\"url\\\":\\\"/test\\\"}\",\"\\\"labels\\\":{\\\"visualRange\\\":\\\"0\\\"}\"],\"ServiceAddress\":\"10.74.56.36\",\"ServicePort\":5656,\"ServiceEnableTagOverride\":false,\"CreateIndex\":1819452,\"ModifyIndex\":1819454}]";
     private static final String catalog4ttlJson =
                     "[{\"Node\":\"server\",\"Address\":\"127.0.0.1\",\"TaggedAddresses\":{\"lan\":\"127.0.0.1\",\"wan\":\"127.0.0.1\"},\"ServiceID\":\"_test_10.74.56.36_5656\",\"ServiceName\":\"test\",\"ServiceTags\":[\"\\\"base\\\":{\\\"protocol\\\":\\\"REST\\\",\\\"version\\\":\\\"v1\\\",\\\"url\\\":\\\"/test\\\"}\",\"\\\"labels\\\":{\\\"visualRange\\\":\\\"0\\\"}\",\"\\\"checks\\\":{\\\"ttl\\\":\\\"10s\\\"}\"],\"ServiceAddress\":\"10.74.56.36\",\"ServicePort\":5656,\"ServiceEnableTagOverride\":false,\"CreateIndex\":1819452,\"ModifyIndex\":1819454}]";
-    private static final String mockRestUrl = "http://127.0.0.1:8500/v1/health/service/test";
+    private static final String mockRestUrl = "http://127.0.0.1:8500/v1/health/service/test-v1";
     private static final String mockPostUrl = "http://127.0.0.1:8500/v1/catalog/register";
-    private static final String mockdel_gettUrl = "http://127.0.0.1:8500/v1/catalog/service/test";
+    private static final String mockdel_gettUrl = "http://127.0.0.1:8500/v1/catalog/service/test-v1";
     private static final String mockdeltUrl = "http://127.0.0.1:8500/v1/catalog/deregister";
     private static final String mockdeltUrl4agent = "http://127.0.0.1:8500/v1/agent/deregister";
-   
+
     private static final String mockgetListUrl = "http://127.0.0.1:8500/v1/catalog/services";
     private static final String restListJson =
-    "{\"consul\":[],\"test-tt\":[\"\\\"labels\\\":{\\\"visualRange\\\":\\\"0\\\"}\",\"\\\"base\\\":{\\\"version\\\":\\\"v1\\\",\\\"protocol\\\":\\\"REST\\\",\\\"url\\\":\\\"/api/microservices/v1\\\",\\\"visualRange\\\":\\\"0\\\"}\",\"\\\"ns\\\":{\\\"namespace\\\":\\\"tt\\\"}\"]}";
+                    "{\"consul\":[],\"test-tt\":[\"\\\"labels\\\":{\\\"visualRange\\\":\\\"0\\\"}\",\"\\\"base\\\":{\\\"version\\\":\\\"v1\\\",\\\"protocol\\\":\\\"REST\\\",\\\"url\\\":\\\"/api/microservices/v1\\\",\\\"visualRange\\\":\\\"0\\\"}\",\"\\\"ns\\\":{\\\"namespace\\\":\\\"tt\\\"}\"]}";
 
 
     private static ConsulServiceWrapper consulServiceWrapper = ConsulServiceWrapper.getInstance();
 
-    
+
     @Test
-    public void test_getAllMicroServiceInstances(){
-    	mockGetList();
-    	List<MicroServiceFullInfo> serviceList=consulServiceWrapper.getAllMicroServiceInstances();
-    	Assert.assertEquals(1, serviceList.size());
-    	MicroServiceFullInfo service=serviceList.get(0);
-    	Assert.assertEquals( "test-tt",service.getServiceName());
-    	Assert.assertEquals( "",service.getNamespace());
+    public void test_getAllMicroServiceInstances() {
+        mockGetList();
+        List<MicroServiceFullInfo> serviceList = consulServiceWrapper.getAllMicroServiceInstances();
+        Assert.assertEquals(1, serviceList.size());
+        MicroServiceFullInfo service = serviceList.get(0);
+        Assert.assertEquals("test-tt", service.getServiceName());
+        Assert.assertEquals("", service.getNamespace());
     }
-    
-    
+
+
     @Test
     public void test_getMicroServiceInstance() {
         mockGetRest();
@@ -106,18 +106,18 @@ public class ConsulServiceWrapperTest {
         serviceInfo.setHost("host");
         serviceInfo.setPath("/test");
         serviceInfo.setNetwork_plane_type("net");
-        
-        List<KeyVaulePair> metadata=new ArrayList<KeyVaulePair>();
-        metadata.add(new KeyVaulePair("key1","val1"));
-        metadata.add(new KeyVaulePair("key2","val2"));
+
+        List<KeyVaulePair> metadata = new ArrayList<KeyVaulePair>();
+        metadata.add(new KeyVaulePair("key1", "val1"));
+        metadata.add(new KeyVaulePair("key2", "val2"));
         serviceInfo.setMetadata(metadata);
-       
-        
-        List<String> labels=new ArrayList<String>();
+
+
+        List<String> labels = new ArrayList<String>();
         labels.add("111:111");
-        labels.add("222:222");        
+        labels.add("222:222");
         serviceInfo.setLabels(labels);
-        
+
         Set<Node> nodes = new HashSet<Node>();
         Node node = new Node();
         node.setIp("10.74.44.1");
@@ -139,8 +139,8 @@ public class ConsulServiceWrapperTest {
             Assert.assertEquals("HTTP 500 Internal Server Error", e.getMessage());
         }
     }
-    
-    
+
+
     @Test
     public void test_saveMicroServiceInstance2() {
         MicroServiceInfo serviceInfo = new MicroServiceInfo();
@@ -155,18 +155,18 @@ public class ConsulServiceWrapperTest {
         serviceInfo.setHost("host");
         serviceInfo.setPath("/test");
         serviceInfo.setNetwork_plane_type("net");
-        
-        List<KeyVaulePair> metadata=new ArrayList<KeyVaulePair>();
-        metadata.add(new KeyVaulePair("key1","val1"));
-        metadata.add(new KeyVaulePair("key2","val2"));
+
+        List<KeyVaulePair> metadata = new ArrayList<KeyVaulePair>();
+        metadata.add(new KeyVaulePair("key1", "val1"));
+        metadata.add(new KeyVaulePair("key2", "val2"));
         serviceInfo.setMetadata(metadata);
-       
-        
-        List<String> labels=new ArrayList<String>();
+
+
+        List<String> labels = new ArrayList<String>();
         labels.add("111:111");
-        labels.add("222:222");        
+        labels.add("222:222");
         serviceInfo.setLabels(labels);
-        
+
         Set<Node> nodes = new HashSet<Node>();
         Node node = new Node();
         node.setIp("10.74.44.1");
@@ -188,7 +188,7 @@ public class ConsulServiceWrapperTest {
             Assert.assertEquals("HTTP 500 Internal Server Error", e.getMessage());
         }
     }
-    
+
     @Test
     public void test_saveMicroServiceInstance4agent() {
         MicroServiceInfo serviceInfo = new MicroServiceInfo();
@@ -204,12 +204,12 @@ public class ConsulServiceWrapperTest {
         nodes.add(node);
         serviceInfo.setNodes(nodes);
 
-          PowerMockito.mockStatic(System.class);        
-	      PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("agent");
-	      DiscoverAppConfig discoverConfig=PowerMockito.mock(DiscoverAppConfig.class);
-	      ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
-	      
-	      
+        PowerMockito.mockStatic(System.class);
+        PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("agent");
+        DiscoverAppConfig discoverConfig = PowerMockito.mock(DiscoverAppConfig.class);
+        ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
+
+
         mockGetRest4null();
         // mockGetPost();
         try {
@@ -217,9 +217,9 @@ public class ConsulServiceWrapperTest {
         } catch (Exception e) {
             Assert.assertEquals("HTTP 500 Internal Server Error", e.getMessage());
         }
-        
+
         PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("catalog");
-	    ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
+        ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
     }
 
     @Test
@@ -228,31 +228,31 @@ public class ConsulServiceWrapperTest {
         mockDelete();
         consulServiceWrapper.deleteMicroService("test", "v1", "");
     }
-    
+
     @Test
     public void test_deleteMicroServiceInstance() {
         mockGet4Delete();
         mockDelete();
         consulServiceWrapper.deleteMicroServiceInstance("test", "v1", "", "10.74.56.36", "5656");
     }
-    
+
     @Test
     public void test_deleteMicroService4agent() {
-        	mockGet4Delete();
-        	mockDelete4agent();
-        
-          DiscoverAppConfig discoverConfig=PowerMockito.mock(DiscoverAppConfig.class);
-          PowerMockito.mockStatic(System.class);        
-	      PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("agent");
-	      ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
-	      
-          consulServiceWrapper.deleteMicroService("test", "v1", "");
-          
-          PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("catalog");
-	      ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
+        mockGet4Delete();
+        mockDelete4agent();
+
+        DiscoverAppConfig discoverConfig = PowerMockito.mock(DiscoverAppConfig.class);
+        PowerMockito.mockStatic(System.class);
+        PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("agent");
+        ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
+
+        consulServiceWrapper.deleteMicroService("test", "v1", "");
+
+        PowerMockito.when(System.getenv("CONSUL_REGISTER_MODE")).thenReturn("catalog");
+        ConfigUtil.getInstance().initConsulRegisterMode(discoverConfig);
     }
 
-   
+
 
     @Test
     public void test_healthCheckbyTTL() {
@@ -275,13 +275,14 @@ public class ConsulServiceWrapperTest {
         PowerMockito.when(HttpClientUtil.httpGet(mockdel_gettUrl)).thenReturn(catalogJson);
 
     }
-    
+
     private void mockGetList() {
         PowerMockito.mockStatic(HttpClientUtil.class);
         PowerMockito.when(HttpClientUtil.httpGet(mockgetListUrl)).thenReturn(restListJson);
-        
+
         ConsulResponse<Object> consulResponse = new ConsulResponse(restJson, new BigInteger("1000"));
-        PowerMockito.when(HttpClientUtil.httpWaitGet("http://127.0.0.1:8500/v1/health/service/test-tt")).thenReturn(consulResponse);
+        PowerMockito.when(HttpClientUtil.httpWaitGet("http://127.0.0.1:8500/v1/health/service/test-tt"))
+                        .thenReturn(consulResponse);
 
     }
 
@@ -300,12 +301,13 @@ public class ConsulServiceWrapperTest {
         PowerMockito.when(HttpClientUtil.httpPostWithJSON(mockdeltUrl, serviceJson)).thenReturn(200);
 
     }
-    
+
     private void mockDelete4agent() {
-        PowerMockito.when(HttpClientUtil.httpPostWithJSON("http://127.0.0.1:8500/v1/agent/service/deregister/_test_10.74.56.36_5656", "")).thenReturn(200);
+        PowerMockito.when(HttpClientUtil.httpPostWithJSON(
+                        "http://127.0.0.1:8500/v1/agent/service/deregister/_test_10.74.56.36_5656", ""))
+                        .thenReturn(200);
 
     }
-
 
 
 

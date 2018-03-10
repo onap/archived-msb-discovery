@@ -34,7 +34,6 @@ import org.onap.msb.sdclient.core.PublishAddress;
 import org.onap.msb.sdclient.core.PublishFullAddress;
 import org.onap.msb.sdclient.core.exception.UnprocessableEntityException;
 
-
 import org.onap.msb.sdclient.wrapper.util.HttpClientUtil;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -48,7 +47,7 @@ public class PublishAddressWrapperTest {
 
     private static final String restJson =
                     "[{\"Node\":{\"Node\":\"A23179111\",\"Address\":\"10.74.44.16\"},\"Service\":{\"ID\":\"_test_10.74.44.16_2356\",\"Service\":\"test\",\"Tags\":[\"\\\"base\\\":{\\\"protocol\\\":\\\"REST\\\",\\\"url\\\":\\\"/api/test/v1\\\",\\\"version\\\":\\\"v1\\\"}\",\"\\\"labels\\\":{\\\"visualRange\\\":\\\"0|1\\\",\\\"apigateway\\\":\\\"test\\\",\\\"network_plane_type\\\":\\\"net\\\"}\"],\"Address\":\"10.74.44.16\",\"Port\":8086},\"Checks\":[{\"CheckID\":\"serfHealth\",\"Name\":\"Serf Health Status\",\"Status\":\"passing\"}]}]";
-    private static final String mockRestUrl = "http://127.0.0.1:8500/v1/health/service/test";
+    private static final String mockRestUrl = "http://127.0.0.1:8500/v1/health/service/test-v1";
 
     private static final String uiJson =
                     "[{\"Node\":{\"Node\":\"A23179111\",\"Address\":\"10.74.44.16\"},\"Service\":{\"ID\":\"_test_10.74.44.16_2356\",\"Service\":\"IUI_test\",\"Tags\":[\"\\\"base\\\":{\\\"protocol\\\":\\\"UI\\\",\\\"url\\\":\\\"/iui/test\\\",\\\"path\\\":\\\"/iui/test_path\\\",\\\"host\\\":\\\"testhost\\\"}\",\"\\\"labels\\\":{\\\"visualRange\\\":\\\"0|1\\\",\\\"apigateway\\\":\\\"test\\\",\\\"network_plane_type\\\":\\\"net\\\"}\"],\"Address\":\"10.74.44.16\",\"Port\":8086},\"Checks\":[{\"CheckID\":\"serfHealth\",\"Name\":\"Serf Health Status\",\"Status\":\"passing\"}]}]";
@@ -56,11 +55,11 @@ public class PublishAddressWrapperTest {
 
     private static final String tcpJson =
                     "[{\"Node\":{\"Node\":\"A23179111\",\"Address\":\"10.74.44.16\"},\"Service\":{\"ID\":\"_test_10.74.44.16_2356\",\"Service\":\"tcp_test\",\"Tags\":[\"\\\"base\\\":{\\\"protocol\\\":\\\"TCP\\\",\\\"url\\\":\\\"/\\\",\\\"version\\\":\\\"v1\\\",\\\"publish_port\\\":\\\"40001\\\"}\",\"\\\"labels\\\":{\\\"visualRange\\\":\\\"0|1\\\",\\\"apigateway\\\":\\\"test\\\",\\\"network_plane_type\\\":\\\"net\\\"}\"],\"Address\":\"10.74.44.16\",\"Port\":8086},\"Checks\":[{\"CheckID\":\"serfHealth\",\"Name\":\"Serf Health Status\",\"Status\":\"passing\"}]}]";
-    private static final String mockTCPUrl = "http://127.0.0.1:8500/v1/health/service/tcp_test";
+    private static final String mockTCPUrl = "http://127.0.0.1:8500/v1/health/service/tcp_test-v1";
 
     private static final String httpJson =
                     "[{\"Node\":{\"Node\":\"A23179111\",\"Address\":\"10.74.44.16\"},\"Service\":{\"ID\":\"_test_10.74.44.16_2356\",\"Service\":\"test\",\"Tags\":[\"\\\"base\\\":{\\\"protocol\\\":\\\"HTTP\\\",\\\"url\\\":\\\"/test\\\",\\\"version\\\":\\\"v1\\\",\\\"host\\\":\\\"testhost\\\"}\",\"\\\"ns\\\":{\\\"namespace\\\":\\\"ns\\\"}\",\"\\\"labels\\\":{\\\"visualRange\\\":\\\"0|1\\\",\\\"apigateway\\\":\\\"test\\\",\\\"network_plane_type\\\":\\\"net\\\"}\"],\"Address\":\"10.74.44.16\",\"Port\":8086},\"Checks\":[{\"CheckID\":\"serfHealth\",\"Name\":\"Serf Health Status\",\"Status\":\"passing\"}]}]";
-    private static final String mockHTTPUrl = "http://127.0.0.1:8500/v1/health/service/test-ns";
+    private static final String mockHTTPUrl = "http://127.0.0.1:8500/v1/health/service/test-v1-ns";
 
 
 

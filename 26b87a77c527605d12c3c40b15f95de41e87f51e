@@ -1,0 +1,8 @@
+Code-Review+1: Dénes Németh <denes.nemeth@nokia.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: HuabingZhao <zhao.huabing@zte.com.cn>
+Submitted-by: HuabingZhao <zhao.huabing@zte.com.cn>
+Submitted-at: Wed, 04 Apr 2018 00:52:46 +0000
+Reviewed-on: https://gerrit.onap.org/r/40353
+Project: msb/discovery
+Branch: refs/heads/master

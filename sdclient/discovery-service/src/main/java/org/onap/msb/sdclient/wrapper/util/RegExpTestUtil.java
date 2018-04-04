@@ -1,5 +1,5 @@
 /**
- * Copyright 2016-2017 ZTE, Inc. and others.
+ * Copyright 2016-2018 ZTE, Inc. and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ public class RegExpTestUtil {
 
 
 
-        String httpUrlReg = "^(|http:\\/\\/)(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
+        String httpUrlReg = "^(|https:\\/\\/|http:\\/\\/)(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
                         + "(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
                         + "(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
                         + "(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)" + ":(\\d{1,5}).*$";

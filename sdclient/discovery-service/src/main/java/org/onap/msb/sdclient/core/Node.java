@@ -1,5 +1,5 @@
 /**
- * Copyright 2016-2017 ZTE, Inc. and others.
+ * Copyright 2016-2018 ZTE, Inc. and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -30,12 +30,12 @@ public class Node implements Serializable {
     private String port;
 
 
-    // 负载均衡策略参数
+    // loadbalance policy parameter
     @ApiModelProperty(value = "lb node params", allowableValues = "weight,max_fails,fail_timeout",
                     example = "weight=5,max_fails=3,fail_timeout=30s")
     private String lb_server_params;
 
-    // 健康检查参数
+    // health check parameter
     @ApiModelProperty(value = "health check type", allowableValues = "TTL,HTTP,TCP", example = "TTL")
     private String checkType = "";
 
@@ -50,7 +50,9 @@ public class Node implements Serializable {
 
     @ApiModelProperty(value = "TTL health check Interval,Unit: second", example = "10s")
     private String ttl;
-
+	
+    @ApiModelProperty(value = "health check skip TLS verify, applies only to HTTPs", allowableValues = "true, false")
+	private Boolean tls_skip_verify = true;
 
     @ApiModelProperty(value = "Instance HA_role", allowableValues = "active,standby", example = "active")
     private String ha_role = "";

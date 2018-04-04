@@ -1,5 +1,5 @@
 /**
- * Copyright 2016-2017 ZTE, Inc. and others.
+ * Copyright 2016-2018 ZTE, Inc. and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -61,7 +61,7 @@ public class ConsulServiceWrapper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsulServiceWrapper.class);
 
     /**
-     * Title: getAllMicroServiceInstances Description: 获取全部服务
+     * Title: getAllMicroServiceInstances Description: get all services
      * 
      * @return
      * @see com.zte.ums.nfv.eco.hsif.msb.core.IMSBService#getAllMicroServiceInstances()
@@ -159,7 +159,7 @@ public class ConsulServiceWrapper {
 
     /**
      * @Title getMicroServiceInstanceForAll
-     * @Description TODO(通过列表遍历获取单个服务信息)
+     * @Description TODO(get sigle service informations by traversal the entire service list)
      * @param consul_serviceName
      * @param version
      * @param namespace
@@ -193,8 +193,6 @@ public class ConsulServiceWrapper {
                     serviceName = consul_serviceName.substring(0, consul_serviceName.length() - namespace.length() - 1);
                 }
             }
-
-
             ConsulResponse serviceResponse =
                             getMicroServiceInfo(consulResponse, serviceName, version, false, "", namespace);
             return (MicroServiceFullInfo) serviceResponse.getResponse();
@@ -204,14 +202,13 @@ public class ConsulServiceWrapper {
                                 + "],namespace[" + namespace + "]:" + e.getMessage());
             }
         }
-
         return null;
     }
 
 
     /**
      * @Title getMicroServiceInstance
-     * @Description TODO(通过Rest接口获取单个服务信息)
+     * @Description TODO(get single service information by REST API)
      * @param serviceName
      * @param version
      * @param ifPassStatus
@@ -224,12 +221,9 @@ public class ConsulServiceWrapper {
      */
     public ConsulResponse getMicroServiceInstance(String serviceName, String version, boolean ifPassStatus, String wait,
                     String index, String labels, String namespace) {
-
         if ("null".equals(version)) {
             version = "";
         }
-
-
         checkServiceNameAndVersion(serviceName, version);
 
         if (!RegExpTestUtil.labelRegExpTest(labels)) {
@@ -244,15 +238,11 @@ public class ConsulServiceWrapper {
             String errInfo = "microservice not found: serviceName-" + serviceName + ", namespace-" + namespace;
             throw new ExtendedNotFoundException(errInfo);
         }
-
         return getMicroServiceInfo(consulResponse, serviceName, version, ifPassStatus, labels, namespace);
-
     }
 
-
-
     /**
-     * Title: getMicroServiceInstance Description:获取指定服务信息
+     * Title: getMicroServiceInstance Description: get the target service information
      * 
      * @param serviceName
      * @param version
@@ -264,22 +254,14 @@ public class ConsulServiceWrapper {
     public ConsulResponse getMicroServiceInfo(ConsulResponse consulResponse, String serviceName, String version,
                     boolean ifPassStatus, String labels, String namespace) {
         // TODO Auto-generated method stub
-
-
-
         String resultJson = (String) consulResponse.getResponse();
         List<HealthService> healthServiceList =
                         JacksonJsonUtil.jsonToListBean(resultJson, new TypeReference<List<HealthService>>() {});
-
-
         if (healthServiceList == null || healthServiceList.size() == 0) {
             String errInfo = "microservice not found: serviceName-" + serviceName + ", namespace-" + namespace;
             throw new ExtendedNotFoundException(errInfo);
-
         }
-
         try {
-
             // label query,format key:value|value2,key2:value2
             boolean islabelQuery = false;
             Map<String, String> query_labelMap = new HashMap<String, String>();
@@ -292,16 +274,12 @@ public class ConsulServiceWrapper {
                     query_labelMap.put(labelArray[0], labelArray[1]);
                 }
             }
-
-
             MicroServiceFullInfo microServiceInfo = new MicroServiceFullInfo();
             Set<NodeInfo> nodes = new HashSet<NodeInfo>();
             Set<String> serviceLabels = new HashSet<String>();
             Set<KeyVaulePair> serviceMetadatas = new HashSet<KeyVaulePair>();
             Set<String> serviceNetworkPlane = new HashSet<String>();
             String nodeNamespace = "";
-
-
 
             for (HealthService healthService : healthServiceList) {
                 Service service = healthService.getService();
@@ -320,14 +298,8 @@ public class ConsulServiceWrapper {
                 node.setIp(service.getAddress());
                 node.setPort(String.valueOf(service.getPort()));
                 node.setNodeId(service.getId());
-
-
-
                 try {
-
                     for (String tag : tagList) {
-
-
                         if (tag.startsWith("\"base\"")) {
                             String ms_base_json = tag.split("\"base\":")[1];
 
@@ -367,9 +339,6 @@ public class ConsulServiceWrapper {
                         if (tag.startsWith("\"labels\"")) {
                             String ms_labels_json = "{" + tag.split("\"labels\":\\{")[1];
                             labelMap = (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_labels_json, Map.class);
-
-
-
                             for (Map.Entry<String, String> labelEntry : labelMap.entrySet()) {
                                 if ("visualRange".equals(labelEntry.getKey())) {
                                     ms_visualRange = labelEntry.getValue();
@@ -378,10 +347,7 @@ public class ConsulServiceWrapper {
                                 } else {
                                     nodeLabels.add(labelEntry.getKey() + ":" + labelEntry.getValue());
                                 }
-
                             }
-
-
                             continue;
                         }
 
@@ -425,7 +391,7 @@ public class ConsulServiceWrapper {
                                             (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_check_json, Map.class);
 
 
-                            // 自动注册健康检查
+                            // automatic registry health check
                             if (StringUtils.isNotBlank(checkMap.get("ttl"))) {
                                 node.setCheckType("TTL");
                                 node.setTtl(checkMap.get("ttl"));
@@ -452,28 +418,20 @@ public class ConsulServiceWrapper {
                             String ms_metadata_json = "{" + tag.split("\"metadata\":\\{")[1];
                             Map<String, String> metadataMap = (Map<String, String>) JacksonJsonUtil
                                             .jsonToBean(ms_metadata_json, Map.class);
-
-
-
                             for (Map.Entry<String, String> entry : metadataMap.entrySet()) {
                                 KeyVaulePair keyVaulePair = new KeyVaulePair();
                                 keyVaulePair.setKey(entry.getKey());
                                 keyVaulePair.setValue(entry.getValue());
                                 ms_metadata.add(keyVaulePair);
                             }
-
                             continue;
                         }
-
-
-
                     }
-
                 } catch (Exception e) {
                     LOGGER.error(serviceName + " read tag  throw exception", e);
                 }
 
-                // 健康检查信息
+                // Health check information
                 List<Check> checks = healthService.getChecks();
                 node.setStatus("passing");
                 for (Check check : checks) {
@@ -487,12 +445,12 @@ public class ConsulServiceWrapper {
                     continue;
                 }
 
-                // namespace过滤
+                // namespace filter
                 if (!namespace.equals(nodeNamespace)) {
                     continue;
                 }
 
-                // 标签过滤
+                // tag filter
                 if (islabelQuery) {
                     boolean ifMatchLabel = false;
                     for (Map.Entry<String, String> query_entry : query_labelMap.entrySet()) {
@@ -515,8 +473,6 @@ public class ConsulServiceWrapper {
                         continue;
                     }
                 }
-
-
                 nodes.add(node);
                 serviceLabels.addAll(nodeLabels);
                 serviceMetadatas.addAll(ms_metadata);
@@ -525,9 +481,6 @@ public class ConsulServiceWrapper {
                 for (int i = 0; i < network_plane_array.length; i++) {
                     serviceNetworkPlane.add(network_plane_array[i]);
                 }
-
-
-
                 microServiceInfo.setServiceName(serviceName);
                 microServiceInfo.setUrl(ms_url);
                 microServiceInfo.setVersion(ms_version);
@@ -543,54 +496,38 @@ public class ConsulServiceWrapper {
                 microServiceInfo.setPath(ms_path);
                 microServiceInfo.setEnable_ssl(Boolean.parseBoolean(ms_enable_ssl));
             }
-
-
             if (nodes.isEmpty()) {
-
-
                 String errInfo = "microservice not found: serviceName-" + serviceName + ",version-" + version
                                 + ",namespace-" + namespace + ",labels-" + labels;
                 throw new ExtendedNotFoundException(errInfo);
 
             }
-
-
-
             microServiceInfo.setLabels(new ArrayList<String>(serviceLabels));
             microServiceInfo.setMetadata(new ArrayList<KeyVaulePair>(serviceMetadatas));
             microServiceInfo.setNodes(nodes);
             microServiceInfo.setNetwork_plane_type(StringUtils.join(serviceNetworkPlane.toArray(), "|"));
-
-
-
             return new ConsulResponse(microServiceInfo, consulResponse.getIndex());
-
-
         } catch (ExtendedNotFoundException e) {
             throw e;
         } catch (Exception e) {
             throw new ExtendedInternalServerErrorException(e.getMessage());
         }
-
-
     }
-
-
 
     public MicroServiceFullInfo updateMicroServiceInstance(String serviceName, String version, String namespace,
                     MicroServiceInfo microServiceInfo, String requestIP, boolean is_manual) {
-        // 数据格式效验
+        // data format validation
         checkMicroServiceInfo(microServiceInfo);
         deleteMicroService(serviceName, version, namespace);
         return saveMicroServiceInstance(microServiceInfo, true, requestIP, is_manual);
     }
 
     /**
-     * Title: saveMicroServiceInstance Description: 保存服务信息
+     * Title: saveMicroServiceInstance Description: save service information
      * 
      * @param microServiceInfo
-     * @param createOrUpdate true：添加或追加更新 false：覆盖
-     * @param requestIP 访问请求IP地址
+     * @param createOrUpdate true：add or superaddition renew information.  false：cover
+     * @param requestIP request IP address
      * @return
      * @see com.zte.ums.nfv.eco.hsif.msb.core.IMSBService#saveMicroServiceInstance(org.onap.msb.sdclient.core.MicroServiceInfo,
      *      boolean, java.lang.String)
@@ -598,13 +535,13 @@ public class ConsulServiceWrapper {
     public MicroServiceFullInfo saveMicroServiceInstance(MicroServiceInfo microServiceInfo, boolean createOrUpdate,
                     String requestIP, boolean is_manual) {
 
-        // 数据格式效验
+        // data format validation
         checkMicroServiceInfo(microServiceInfo);
 
         String serviceName = microServiceInfo.getServiceName().trim();
 
         if (createOrUpdate == false) {
-            // 覆盖原记录，先删除后添加
+            // cover the original record, add record after delete
             try {
                 deleteMicroService(microServiceInfo.getServiceName(), microServiceInfo.getVersion(),
                                 microServiceInfo.getNamespace());
@@ -614,9 +551,6 @@ public class ConsulServiceWrapper {
                                 + microServiceInfo.getNamespace();
                 LOGGER.warn(errInfo);
             }
-
-
-
         }
 
         Set<Node> nodes = microServiceInfo.getNodes();
@@ -630,11 +564,8 @@ public class ConsulServiceWrapper {
                 if (StringUtils.isBlank(node.getIp())) {
                     node.setIp(requestIP);
                 }
-
                 String serverId = microServiceInfo.getNamespace() + "_" + microServiceInfo.getVersion() + "_"
                                 + serviceName + "_" + node.getIp() + "_" + node.getPort();
-
-
                 List<String> tags = new ArrayList<String>();
 
                 Map<String, String> baseMap = new HashMap<String, String>();
@@ -653,13 +584,13 @@ public class ConsulServiceWrapper {
                 baseMap.put("is_manual", Boolean.toString(is_manual));
                 baseMap.put("enable_ssl", Boolean.toString(microServiceInfo.isEnable_ssl()));
 
-                // TCP和UDP协议保存 nginx端口和负载均衡策略
+                // save TCP and UDP protocal, nginx port and load balance policy
                 if (StringUtils.isNotBlank(microServiceInfo.getPublish_port())) {
                     baseMap.put("publish_port", microServiceInfo.getPublish_port());
                 }
                 String lb_policy = microServiceInfo.getLb_policy();
 
-                // 保存服务的负载均衡策略
+                // save the load balance policy of service
                 if (StringUtils.isNotBlank(lb_policy)) {
                     switch (lb_policy) {
                         case "round-robin":
@@ -696,7 +627,7 @@ public class ConsulServiceWrapper {
                     baseMap.put("path", microServiceInfo.getPath());
                 }
 
-                // 保存健康检查参数
+                // save health check parameter
                 if (StringUtils.isNotBlank(node.getCheckType())) {
 
                     AgentService.Check check = agentService.createCheck();
@@ -735,7 +666,7 @@ public class ConsulServiceWrapper {
                     }
                 }
 
-                // 同步过滤参数组合为json格式存储
+                // synchronize filter parameter, joint in to json and save it
                 labelMap.put("visualRange", StringUtils.join(visualRangeArray, "|"));
 
                 if (StringUtils.isNotBlank(microServiceInfo.getNetwork_plane_type())) {
@@ -753,8 +684,6 @@ public class ConsulServiceWrapper {
                 if (StringUtils.isNotBlank(microServiceInfo.getNamespace())) {
                     nsMap.put("namespace", microServiceInfo.getNamespace());
                 }
-
-
 
                 tags.add("\"base\":" + JacksonJsonUtil.beanToJson(baseMap));
                 if (!lbMap.isEmpty())
@@ -777,7 +706,6 @@ public class ConsulServiceWrapper {
                 String consul_serviceName = getServiceName4Consul(serviceName, microServiceInfo.getVersion(),
                                 microServiceInfo.getNamespace());
 
-
                 agentService.setName(consul_serviceName);
 
                 int registerResult;
@@ -790,27 +718,17 @@ public class ConsulServiceWrapper {
                 if (registerResult != 200) {
                     throw new Exception("register consul service fail:" + registerResult);
                 }
-
-
-
             }
 
             LOGGER.info("save microservice success: serviceName-" + microServiceInfo.getServiceName() + ",version-"
                             + microServiceInfo.getVersion() + " ,namespace-" + microServiceInfo.getNamespace());
-
             return getMicroServiceInstance(serviceName, microServiceInfo.getVersion(), microServiceInfo.getNamespace());
-
-
         } catch (ExtendedNotFoundException e) {
             throw e;
         } catch (Exception e) {
             LOGGER.error("register consul service throw exception", e);
             throw new ExtendedInternalServerErrorException(e.getMessage());
-
         }
-
-
-
     }
 
     public MicroServiceFullInfo getMicroServiceInstance(String serviceName, String version, String namespace) {
@@ -820,7 +738,7 @@ public class ConsulServiceWrapper {
 
 
     /**
-     * Title: deleteMicroService Description: 删除服务信息
+     * Title: deleteMicroService Description: delete service information
      * 
      * @param serviceName
      * @param version
@@ -828,27 +746,18 @@ public class ConsulServiceWrapper {
      *      java.lang.String)
      */
     public void deleteMicroService(String serviceName, String version, String namespace) {
-
-
         if ("null".equals(version)) {
             version = "";
         }
-
         checkServiceNameAndVersion(serviceName, version);
-
-
         String consul_serviceName = getServiceName4Consul(serviceName, version, namespace);
 
         List<CatalogService> catalogServiceList = getConsulServices(consul_serviceName, version);
-
-
         if (catalogServiceList == null || catalogServiceList.size() == 0) {
             String errInfo = "microservice not found: serviceName-" + serviceName + ",version-" + version
                             + " ,namespace-" + namespace;
             throw new ExtendedNotFoundException(errInfo);
-
         }
-
         boolean ifFindServiceForNS = false;
 
         for (CatalogService catalogService : catalogServiceList) {
@@ -861,34 +770,23 @@ public class ConsulServiceWrapper {
 
                     if (tag.startsWith("\"ns\"")) {
                         String ms_ns_json = tag.split("\"ns\":")[1];
-
-
                         Map<String, String> nsMap =
                                         (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_ns_json, Map.class);
                         if (nsMap.get("namespace") != null) {
                             serviceNamespace = nsMap.get("namespace");
                         }
-
                         continue;
                     }
-
                     if (tag.startsWith("\"base\"")) {
                         String ms_base_json = tag.split("\"base\":")[1];
-
-
                         Map<String, String> baseMap =
                                         (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_base_json, Map.class);
                         if (baseMap.get("version") != null) {
                             serviceVersion = baseMap.get("version");
                         }
-
-
                         continue;
-
                     }
-
                 }
-
             } catch (Exception e) {
                 LOGGER.error(serviceName + " read tag  throw exception", e);
             }
@@ -914,17 +812,11 @@ public class ConsulServiceWrapper {
                 if (delResult != 200) {
                     throw new Exception("delete consul service fail:" + delResult);
                 }
-
-
             } catch (Exception e) {
                 LOGGER.error("delete consul service throw exception", e);
                 throw new ExtendedInternalServerErrorException(e.getMessage());
-
             }
-
         }
-
-
         if (!ifFindServiceForNS) {
             String errInfo = "microservice not found: serviceName-" + serviceName + ",version-" + version
                             + ",namespace-" + namespace;
@@ -933,11 +825,10 @@ public class ConsulServiceWrapper {
 
         LOGGER.info("microservice delete success: serviceName-" + serviceName + ",version-" + version + ",namespace-"
                         + namespace);
-
     }
 
     /**
-     * Title: deleteMicroServiceInstance Description: 刪除服务的节点信息
+     * Title: deleteMicroServiceInstance Description: delete service node information
      * 
      * @param serviceName
      * @param version
@@ -969,25 +860,18 @@ public class ConsulServiceWrapper {
 
         List<CatalogService> catalogServiceList = getConsulServices(consul_serviceName, version);
 
-
         if (catalogServiceList == null || catalogServiceList.size() == 0) {
             String errInfo = "microservice not found: serviceName-" + serviceName + ",version-" + version;
             LOGGER.warn(errInfo);
             throw new ExtendedNotFoundException(errInfo);
-
         }
 
         String node = "", serviceID = "";
         boolean ifFindBNode = false;
-
-
         for (CatalogService catalogService : catalogServiceList) {
 
             String serviceAddress = catalogService.getServiceAddress();
             String servicePort = String.valueOf(catalogService.getServicePort());
-
-
-
             List<String> tagList = catalogService.getServiceTags();
             String ms_version = "", ms_namespace = "";
             try {
@@ -996,30 +880,19 @@ public class ConsulServiceWrapper {
 
                     if (tag.startsWith("\"base\"")) {
                         String ms_base_json = tag.split("\"base\":")[1];
-
-
-
                         Map<String, String> baseMap =
                                         (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_base_json, Map.class);
                         if (baseMap.get("version") != null) {
                             ms_version = baseMap.get("version");
                         }
-
-
                     }
-
                     if (tag.startsWith("\"ns\"")) {
                         String ms_ns_json = tag.split("\"ns\":")[1];
-
-
-
                         Map<String, String> nsMap =
                                         (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_ns_json, Map.class);
                         if (nsMap.get("namespace") != null) {
                             ms_namespace = nsMap.get("namespace");
                         }
-
-
                     }
                 }
 
@@ -1033,17 +906,11 @@ public class ConsulServiceWrapper {
                 ifFindBNode = true;
                 break;
             }
-
-
         }
-
         if (!ifFindBNode) {
             throw new ExtendedNotFoundException("delete MicroServiceInfo FAIL: node-" + ip + ":" + port + " namespace-"
                             + namespace + " not found ");
         }
-
-
-
         try {
             int delResult;
             if (DiscoverUtil.CONSUL_REGISTER_MODE.equals(ConfigUtil.getInstance().getConsulRegisterMode())) {
@@ -1055,19 +922,15 @@ public class ConsulServiceWrapper {
             if (delResult != 200) {
                 throw new Exception("delete consul service fail:" + delResult);
             }
-
-
         } catch (Exception e) {
             LOGGER.error("delete consul service throw exception", e);
             throw new ExtendedInternalServerErrorException(e.getMessage());
-
         }
-
     }
 
     /**
      * @Title getConsulServices
-     * @Description TODO(通过方法：根据服务名\版本号获取consul服务信息)
+     * @Description TODO(pass way: get consul service information according to service name and version)
      * @param serviceName
      * @return
      * @return List<CatalogService>
@@ -1082,8 +945,6 @@ public class ConsulServiceWrapper {
         List<CatalogService> catalogServiceList = (List<CatalogService>) JacksonJsonUtil.jsonToListBean(resultJson);
 
         for (CatalogService catalogService : catalogServiceList) {
-
-
             List<String> tagList = catalogService.getServiceTags();
             String ms_version = "";
             try {
@@ -1091,16 +952,12 @@ public class ConsulServiceWrapper {
 
                     if (tag.startsWith("\"base\"")) {
                         String ms_base_json = tag.split("\"base\":")[1];
-
-
                         Map<String, String> baseMap =
                                         (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_base_json, Map.class);
                         if (baseMap.get("version") != null) {
                             ms_version = baseMap.get("version");
                         }
-
                         break;
-
                     }
                 }
             } catch (Exception e) {
@@ -1110,15 +967,13 @@ public class ConsulServiceWrapper {
                 catalogServiceList.remove(catalogService);
                 break;
             }
-
-
         }
         return catalogServiceList;
     }
 
     /**
      * @Title getHealthServices
-     * @Description TODO(通过方法：根据服务名获取consul服务健康检查信息)
+     * @Description TODO(pass way: get health check information of consul by service name)
      * @param serviceName
      * @return List<HealthService>
      */
@@ -1139,13 +994,9 @@ public class ConsulServiceWrapper {
                 healthServiceUrlBuilder.append("?wait=").append(wait).append("&index=").append(index);
             }
         }
-
         return HttpClientUtil.httpWaitGet(healthServiceUrlBuilder.toString());
-
     }
-
-
-
+    
     public void healthCheckbyTTL(String serviceName, String version, String namespace, NodeAddress checkNode) {
         // TODO Auto-generated method stub
         if ("null".equals(version)) {
@@ -1153,41 +1004,26 @@ public class ConsulServiceWrapper {
         }
 
         checkServiceNameAndVersion(serviceName, version);
-
-
         if (!RegExpTestUtil.ipRegExpTest(checkNode.getIp())) {
             throw new UnprocessableEntityException(
                             "healthCheck by TTL FAIL:IP(" + checkNode.getIp() + ")is not a valid IP address");
         }
-
         if (!RegExpTestUtil.portRegExpTest(checkNode.getPort())) {
             throw new UnprocessableEntityException(
                             "healthCheck by TTL FAIL:Port(" + checkNode.getPort() + ")is not a valid Port address");
         }
-
         String consul_serviceName = getServiceName4Consul(serviceName, version, namespace);
-
         List<CatalogService> catalogServiceList = getConsulServices(consul_serviceName, version);
-
-
         if (catalogServiceList == null || catalogServiceList.size() == 0) {
             String errInfo = "microservice not found: serviceName-" + serviceName + ",version-" + version;
             LOGGER.warn(errInfo);
             throw new ExtendedNotFoundException(errInfo);
-
         }
-
-
         boolean ifFindBNode = false;
-
-
         for (CatalogService catalogService : catalogServiceList) {
-
             String serviceAddress = catalogService.getServiceAddress();
             String servicePort = String.valueOf(catalogService.getServicePort());
             boolean ifttlCheck = false;
-
-
             List<String> tagList = catalogService.getServiceTags();
             String ms_version = "", ms_namespace = "";
             try {
@@ -1213,26 +1049,20 @@ public class ConsulServiceWrapper {
                             ms_namespace = nsMap.get("namespace");
                         }
                     }
-
-
                     if (tag.startsWith("\"checks\"")) {
                         String ms_check_json = tag.split("\"checks\":")[1];
                         Map<String, String> checkMap =
                                         (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_check_json, Map.class);
 
-                        // 自动注册健康检查
+                        // automatic registry health check
                         if (StringUtils.isNotBlank(checkMap.get("ttl"))) {
                             ifttlCheck = true;
                         }
                     }
                 }
-
             } catch (Exception e) {
                 LOGGER.error(serviceName + " read tag  throw exception", e);
             }
-
-
-
             if (serviceAddress.equals(checkNode.getIp()) && servicePort.equals(checkNode.getPort())
                             && ms_version.equals(version) && ms_namespace.equals(namespace)) {
                 if (!ifttlCheck) {
@@ -1242,19 +1072,11 @@ public class ConsulServiceWrapper {
                 ifFindBNode = true;
                 break;
             }
-
-
         }
-
-
-
         if (!ifFindBNode) {
             throw new ExtendedNotFoundException("healthCheck by TTL FAIL: node-" + checkNode.getIp() + ":"
                             + checkNode.getPort() + " namespace-" + namespace + " not found ");
         }
-
-
-
         try {
             String checkID = (new StringBuilder().append("service:").append(namespace).append("_").append(serviceName)
                             .append("_").append(checkNode.getIp()).append("_").append(checkNode.getPort())).toString();
@@ -1274,17 +1096,12 @@ public class ConsulServiceWrapper {
         } catch (Exception e) {
             throw new ExtendedInternalServerErrorException("healthCheck by TTL FAIL:" + e.getMessage());
         }
-
-
-
     }
 
     // public MicroServiceFullInfo getApigatewayServiceInfo4Host(String namespace){
     // return getMicroServiceInstance(DiscoverUtil.APIGATEWAY_SERVINCE, "v1", namespace);
     // }
     //
-
-
 
     public List<MicroServiceFullInfo> getMicroServiceForNodes(String serviceName, String version, boolean ifPassStatus,
                     String labels, String namespace) {
@@ -1299,8 +1116,6 @@ public class ConsulServiceWrapper {
             throw new UnprocessableEntityException(
                             "get MicroServiceInfo FAIL: The label query parameter format is wrong (key:value)");
         }
-
-
         String consul_serviceName = getServiceName4Consul(serviceName, version, namespace);
 
         ConsulResponse consulResponse = getHealthServices(consul_serviceName, ifPassStatus, "", "");
@@ -1311,8 +1126,6 @@ public class ConsulServiceWrapper {
         String resultJson = (String) consulResponse.getResponse();
         List<HealthService> healthServiceList =
                         JacksonJsonUtil.jsonToListBean(resultJson, new TypeReference<List<HealthService>>() {});
-
-
         if (healthServiceList == null || healthServiceList.size() == 0) {
             String errInfo = "microservice not found: serviceName-" + serviceName;
             throw new ExtendedNotFoundException(errInfo);
@@ -1326,17 +1139,12 @@ public class ConsulServiceWrapper {
             if (StringUtils.isNotBlank(labels)) {
                 islabelQuery = true;
                 String[] routeLabels = StringUtils.split(labels, ",");
-
                 for (int i = 0; i < routeLabels.length; i++) {
                     String[] labelArray = StringUtils.split(routeLabels[i], ":");
                     query_labelMap.put(labelArray[0], labelArray[1]);
                 }
             }
-
             List<MicroServiceFullInfo> microServiceInfoList = new ArrayList<MicroServiceFullInfo>();
-
-
-
             for (HealthService healthService : healthServiceList) {
 
                 Set<NodeInfo> nodes = new HashSet<NodeInfo>();
@@ -1360,14 +1168,8 @@ public class ConsulServiceWrapper {
                 node.setIp(service.getAddress());
                 node.setPort(String.valueOf(service.getPort()));
                 node.setNodeId(service.getId());
-
-
-
                 try {
-
                     for (String tag : tagList) {
-
-
                         if (tag.startsWith("\"base\"")) {
                             String ms_base_json = tag.split("\"base\":")[1];
 
@@ -1398,20 +1200,14 @@ public class ConsulServiceWrapper {
                             if (baseMap.get("path") != null) {
                                 ms_path = baseMap.get("path");
                             }
-
                             if (baseMap.get("enable_ssl") != null) {
                                 ms_publish_port = (baseMap.get("enable_ssl"));
                             }
-
                             continue;
                         }
-
                         if (tag.startsWith("\"labels\"")) {
                             String ms_labels_json = "{" + tag.split("\"labels\":\\{")[1];
                             labelMap = (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_labels_json, Map.class);
-
-
-
                             for (Map.Entry<String, String> labelEntry : labelMap.entrySet()) {
                                 if ("visualRange".equals(labelEntry.getKey())) {
                                     ms_visualRange = labelEntry.getValue();
@@ -1420,54 +1216,40 @@ public class ConsulServiceWrapper {
                                 } else {
                                     nodeLabels.add(labelEntry.getKey() + ":" + labelEntry.getValue());
                                 }
-
                             }
-
-
                             continue;
                         }
-
                         if (tag.startsWith("\"ns\"")) {
                             String ms_namespace_json = tag.split("\"ns\":")[1];
                             Map<String, String> namespaceMap = (Map<String, String>) JacksonJsonUtil
                                             .jsonToBean(ms_namespace_json, Map.class);
-
                             if (namespaceMap.get("namespace") != null) {
                                 nodeNamespace = namespaceMap.get("namespace");
                             } else {
                                 nodeNamespace = "";
                             }
-
                             continue;
                         }
-
                         if (tag.startsWith("\"lb\"")) {
                             String ms_lb_json = tag.split("\"lb\":")[1];
                             Map<String, String> lbMap =
                                             (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_lb_json, Map.class);
-
                             if (lbMap.get("lb_policy") != null) {
                                 ms_lb_policy = lbMap.get("lb_policy");
                                 if (ms_lb_policy.startsWith("hash") || ms_lb_policy.equals("ip_hash")) {
                                     ms_lb_policy = "ip_hash";
                                 }
-
                             }
-
                             if (lbMap.get("lb_server_params") != null) {
                                 node.setLb_server_params(lbMap.get("lb_server_params").replace(" ", ","));
                             }
-
                             continue;
                         }
-
                         if (tag.startsWith("\"checks\"")) {
                             String ms_check_json = tag.split("\"checks\":")[1];
                             Map<String, String> checkMap =
                                             (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_check_json, Map.class);
-
-
-                            // 自动注册健康检查
+                            // automatic register health check
                             if (StringUtils.isNotBlank(checkMap.get("ttl"))) {
                                 node.setCheckType("TTL");
                                 node.setTtl(checkMap.get("ttl"));
@@ -1486,36 +1268,26 @@ public class ConsulServiceWrapper {
                                 if (checkMap.get("timeout") != null)
                                     node.setCheckTimeOut(checkMap.get("timeout"));
                             }
-
                             continue;
                         }
-
                         if (tag.startsWith("\"metadata\"")) {
                             String ms_metadata_json = "{" + tag.split("\"metadata\":\\{")[1];
                             Map<String, String> metadataMap = (Map<String, String>) JacksonJsonUtil
                                             .jsonToBean(ms_metadata_json, Map.class);
-
-
-
                             for (Map.Entry<String, String> entry : metadataMap.entrySet()) {
                                 KeyVaulePair keyVaulePair = new KeyVaulePair();
                                 keyVaulePair.setKey(entry.getKey());
                                 keyVaulePair.setValue(entry.getValue());
                                 ms_metadata.add(keyVaulePair);
                             }
-
                             continue;
                         }
-
-
-
                     }
-
                 } catch (Exception e) {
                     LOGGER.error(serviceName + " read tag  throw exception", e);
                 }
 
-                // 健康检查信息
+                // health check information
                 List<Check> checks = healthService.getChecks();
                 node.setStatus("passing");
                 for (Check check : checks) {
@@ -1529,12 +1301,12 @@ public class ConsulServiceWrapper {
                     continue;
                 }
 
-                // namespace过滤
+                // namespace filter
                 if (!namespace.equals(nodeNamespace)) {
                     continue;
                 }
 
-                // 标签过滤
+                // label filter
                 if (islabelQuery) {
                     boolean ifMatchLabel = false;
                     for (Map.Entry<String, String> query_entry : query_labelMap.entrySet()) {
@@ -1550,15 +1322,11 @@ public class ConsulServiceWrapper {
                             ifMatchLabel = true;
                             break;
                         }
-
                     }
-
                     if (!ifMatchLabel) {
                         continue;
                     }
                 }
-
-
                 nodes.add(node);
                 serviceLabels.addAll(nodeLabels);
 
@@ -1575,28 +1343,18 @@ public class ConsulServiceWrapper {
                 microServiceInfo.setHost(ms_host);
                 microServiceInfo.setPath(ms_path);
                 microServiceInfo.setEnable_ssl(Boolean.parseBoolean(ms_enable_ssl));
-
                 microServiceInfo.setMetadata(ms_metadata);
                 microServiceInfo.setNamespace(namespace);
                 microServiceInfo.setLabels(new ArrayList<String>(serviceLabels));
                 microServiceInfo.setNodes(nodes);
-
                 microServiceInfoList.add(microServiceInfo);
             }
-
-
-
             if (microServiceInfoList.size() == 0) {
                 String errInfo = "microservice not found: serviceName-" + serviceName + ",version-" + version
                                 + ",namespace-" + namespace + ",labels-" + labels;
                 throw new ExtendedNotFoundException(errInfo);
             }
-
-
-
             return microServiceInfoList;
-
-
         } catch (ExtendedNotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -1611,15 +1369,11 @@ public class ConsulServiceWrapper {
         if (StringUtils.isNotBlank(version)) {
             consul_serviceName = consul_serviceName + "-" + version;
         }
-
         if (StringUtils.isNotBlank(namespace)) {
             consul_serviceName = consul_serviceName + "-" + namespace;
         }
-
         return consul_serviceName;
     }
-
-
 
     private void checkMicroServiceInfo(MicroServiceInfo microServiceInfo) {
 
@@ -1636,30 +1390,23 @@ public class ConsulServiceWrapper {
             throw new UnprocessableEntityException("register MicroServiceInfo FAIL:ServiceName("
                             + microServiceInfo.getServiceName() + ")  format error");
         }
-
         if (StringUtils.isNotBlank(microServiceInfo.getHost())) {
             if (!RegExpTestUtil.serviceNameRegExpTest(microServiceInfo.getHost().trim())) {
                 throw new UnprocessableEntityException(
                                 "register MicroServiceInfo host (" + microServiceInfo.getHost() + ")  format error");
             }
         }
-
         if (StringUtils.isNotBlank(microServiceInfo.getLb_policy())) {
             if (!DiscoverUtil.checkExist(DiscoverUtil.LB_POLICY_LIST, microServiceInfo.getLb_policy().trim(), ",")) {
                 throw new UnprocessableEntityException("register MicroServiceInfo FAIL:lb_policy is wrong,value range:("
                                 + DiscoverUtil.LB_POLICY_LIST + ")");
             }
-
         }
-
         if (StringUtils.isNotBlank(microServiceInfo.getVersion())) {
             if (!RegExpTestUtil.versionRegExpTest(microServiceInfo.getVersion())) {
                 throw new UnprocessableEntityException("register MicroServiceInfo FAIL:version is not a valid  format");
-
             }
         }
-
-
 
         if (StringUtils.isNotBlank(microServiceInfo.getUrl())) {
 
@@ -1669,23 +1416,18 @@ public class ConsulServiceWrapper {
                     url = "/" + url;
                     microServiceInfo.setUrl(url);
                 }
-
                 if (url.endsWith("/")) {
                     url = url.substring(0, url.length() - 1);
                     microServiceInfo.setUrl(url);
                 }
             }
-
             if (!RegExpTestUtil.urlRegExpTest(url)) {
                 throw new UnprocessableEntityException(
                                 "register MicroServiceInfo FAIL:url (" + url + ") is not a valid format");
             }
-
         } else {
             microServiceInfo.setUrl("/");
         }
-
-
         if (StringUtils.isNotBlank(microServiceInfo.getPath())) {
 
             String path = microServiceInfo.getPath();
@@ -1694,24 +1436,16 @@ public class ConsulServiceWrapper {
                     path = "/" + path;
                     microServiceInfo.setPath(path);
                 }
-
                 if (path.endsWith("/")) {
                     path = path.substring(0, path.length() - 1);
                     microServiceInfo.setPath(path);
                 }
             }
-
             if (!RegExpTestUtil.urlRegExpTest(path)) {
                 throw new UnprocessableEntityException(
                                 "register MicroServiceInfo FAIL:path (" + path + ") is not a valid format");
-
             }
-
-
-
         }
-
-
         for (Node node : microServiceInfo.getNodes()) {
 
             if (StringUtils.isNotBlank(node.getIp())) {
@@ -1725,8 +1459,6 @@ public class ConsulServiceWrapper {
                 throw new UnprocessableEntityException("register MicroServiceInfo FAIL:Port(" + node.getPort()
                                 + ")is not a valid Port address");
             }
-
-
             if (StringUtils.isNotBlank(node.getLb_server_params())) {
                 try {
                     String[] lb_server_params_array = node.getLb_server_params().split(",");
@@ -1743,7 +1475,6 @@ public class ConsulServiceWrapper {
                                     "register MicroServiceInfo FAIL:lb_server_params'format is wrong:"
                                                     + node.getLb_server_params());
                 }
-
             }
 
             if (StringUtils.isNotBlank(node.getCheckType())) {
@@ -1752,20 +1483,15 @@ public class ConsulServiceWrapper {
                                     "register MicroServiceInfo FAIL:checkType is wrong,value range:("
                                                     + DiscoverUtil.CHECK_TYPE_LIST + ")");
                 }
-
-
                 if ("HTTP".equals(node.getCheckType()) || "TCP".equals(node.getCheckType())) {
                     String checkUrl = node.getCheckUrl();
                     if (StringUtils.isBlank(checkUrl)) {
                         throw new UnprocessableEntityException(
                                         "register MicroServiceInfo FAIL:checkUrl field is empty");
                     }
-
                     if ("HTTP".equals(node.getCheckType())) {
-
-
                         if (RegExpTestUtil.httpUrlRegExpTest(checkUrl)) {
-                            if (!checkUrl.startsWith("http://")) {
+                            if ((!checkUrl.startsWith("http://"))&&(!checkUrl.startsWith("https://"))) {
                                 checkUrl = "http://" + checkUrl;
                                 node.setCheckUrl(checkUrl);
                             }
@@ -1777,10 +1503,7 @@ public class ConsulServiceWrapper {
                             node.setCheckUrl(checkUrl);
                         }
                     }
-
-
                 }
-
             }
 
             if (StringUtils.isNotBlank(node.getHa_role())) {
@@ -1790,12 +1513,7 @@ public class ConsulServiceWrapper {
                                                     + DiscoverUtil.CHECK_HA_ROLE_LIST + ")");
                 }
             }
-
-
         }
-
-
-
         String[] visualRangeArray = StringUtils.split(microServiceInfo.getVisualRange(), "|");
         for (int i = 0; i < visualRangeArray.length; i++) {
             if (!DiscoverUtil.checkExist(DiscoverUtil.VISUAL_RANGE_LIST, visualRangeArray[i], ",")) {
@@ -1818,10 +1536,7 @@ public class ConsulServiceWrapper {
                 }
             }
         }
-
-
-
-        // 判断自定义发布端口
+        // user-defined distribution port validation
         if (StringUtils.isNotBlank(microServiceInfo.getPublish_port())) {
 
             if (DiscoverUtil.checkExist(DiscoverUtil.HTTP_PROTOCOL, microServiceInfo.getProtocol())) {
@@ -1832,7 +1547,7 @@ public class ConsulServiceWrapper {
 
                     int portNum = publishPortArray.length;
 
-                    // 判断端口格式
+                    // port format validation
                     for (int i = 0; i < portNum; i++) {
                         if (!RegExpTestUtil.portRegExpTest(publishPortArray[i])) {
                             throw new UnprocessableEntityException("register MicroServiceInfo FAIL:Public Port("
@@ -1840,12 +1555,12 @@ public class ConsulServiceWrapper {
                         }
                     }
 
-                    // 判断端口数量
+                    // port number validation
                     if (portNum == 0 || portNum > 2) {
                         throw new UnprocessableEntityException(
                                         "register MicroServiceInfo FAIL:Public Port num is wrong:" + portNum);
                     } else if (portNum == 2) {
-                        // 判断端口值是否一样
+                        // port value equality validation
                         if (publishPortArray[0].equals(publishPortArray[1])) {
                             throw new UnprocessableEntityException(
                                             "register MicroServiceInfo FAIL:Two ports have the same value :"
@@ -1880,16 +1595,9 @@ public class ConsulServiceWrapper {
             } else {
                 microServiceInfo.setPublish_port("");
             }
-
-
-
         }
-
-
-
     }
-
-
+    
     private void checkServiceNameAndVersion(String serviceName, String version) {
         if (StringUtils.isBlank(serviceName)) {
             throw new UnprocessableEntityException("check MicroServiceInfo FAIL:serviceName  can't be empty");

@@ -141,6 +141,14 @@ public class Node implements Serializable {
         this.checkTimeOut = checkTimeOut;
     }
 
+    public Boolean getTls_skip_verify() {
+        return tls_skip_verify;
+    }
+
+    public void setTls_skip_verify(Boolean tls_skip_verify) {
+        this.tls_skip_verify = tls_skip_verify;
+    }
+
 
 
 }

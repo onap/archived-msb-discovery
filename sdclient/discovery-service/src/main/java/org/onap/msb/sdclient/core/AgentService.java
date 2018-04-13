@@ -1,5 +1,5 @@
 /**
- * Copyright 2016-2017 ZTE, Inc. and others.
+ * Copyright 2016-2018 ZTE, Inc. and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -64,6 +64,8 @@ public class AgentService implements Serializable {
         @JsonProperty("Timeout")
         private String timeout;
 
+        @JsonProperty("tls_skip_verify")
+        private Boolean tlsSkipVerify=true;
 
         private String status = "passing";
 
@@ -113,6 +115,14 @@ public class AgentService implements Serializable {
 
         public void setStatus(String status) {
             this.status = status;
+        }
+
+        public Boolean getTlsSkipVerify() {
+            return tlsSkipVerify;
+        }
+
+        public void setTlsSkipVerify(Boolean tlsSkipVerify) {
+            this.tlsSkipVerify = tlsSkipVerify;
         }
 
 

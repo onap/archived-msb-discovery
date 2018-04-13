@@ -640,7 +640,7 @@ public class ConsulServiceWrapper {
                         check.setInterval(node.getCheckInterval());
                         check.setHttp(node.getCheckUrl());
                         check.setTimeout(node.getCheckTimeOut());
-
+                        check.setTlsSkipVerify(node.getTls_skip_verify());
                         checkMap.put("http", node.getCheckUrl());
                         checkMap.put("interval", node.getCheckInterval());
                         checkMap.put("timeout", node.getCheckTimeOut());

@@ -1,18 +1,3 @@
-/*
- * Copyright 2016-2017 ZTE, Inc. and others.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 /******************************************************************************
  * jquery.i18n.properties
  * 
@@ -88,13 +73,18 @@ $.i18n.properties = function(settings) {
 		//}
 		// 3. with language code and country code (eg, Messages_pt_PT.properties)
 		// 将寻找资源文件的顺序倒置
+		    var xhrResult;
         if(settings.language.length >= 5) {
-            loadAndParseFile(settings.path + files[i] + '-' + settings.language.substring(0, 5) +'.properties', settings);
+            xhrResult = loadAndParseFile(settings.path + files[i] + '-' + settings.language.substring(0, 5) +'.properties', settings);
         } else if(settings.language.length >= 2) {
-            loadAndParseFile(settings.path + files[i] + '-' + settings.language.substring(0, 2) +'.properties', settings);
+            xhrResult = loadAndParseFile(settings.path + files[i] + '-' + settings.language.substring(0, 2) +'.properties', settings);
 		} else {
-			loadAndParseFile(settings.path + files[i] + '.properties', settings);
+			xhrResult = loadAndParseFile(settings.path + files[i] + '.properties', settings);
 		}
+		if (xhrResult.status === 404) {
+      //fallback to en_US
+      loadAndParseFile(settings.path + files[i] + '-en-US.properties', settings);
+    }
 	}
 	
 	// call callback
@@ -260,7 +250,7 @@ $.i18n.browserLang = function() {
 
 /** Load and parse .properties files */
 function loadAndParseFile(filename, settings) {
-	$.ajax({
+	return $.ajax({
         url:        filename,
         async:      false,
         cache:		settings.cache,

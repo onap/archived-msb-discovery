@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c62ca695",
+        "filename": "discovery-ui/src/main/resources/iui/microservices/js/jquery.i18n/jquery.i18n.properties-1.0.9.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 219
+      },
+      "writtenOn": "2018-05-15T18:41:26Z",
+      "side": 1,
+      "message": "Comments in code must be in English.",
+      "range": {
+        "startLine": 75,
+        "startChar": 5,
+        "endLine": 75,
+        "endChar": 17
+      },
+      "revId": "6dec72aff691f47a9c090249f22a594b41516e25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

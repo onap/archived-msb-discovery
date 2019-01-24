@@ -36,20 +36,12 @@ public class HealthCache extends ConsulCache<String, ServiceHealth> {
 
     public static HealthCache newCache(final HealthClient healthClient, final String serviceName,
                     final int watchSeconds) {
-        Function<ServiceHealth, String> keyExtractor = new Function<ServiceHealth, String>() {
-            @Override
-            public String apply(ServiceHealth input) {
-                // return input.getKey().substring(rootPath.length() + 1);
-                return input.getService().getId();
-            }
+        Function<ServiceHealth, String> keyExtractor = input -> {
+            // return input.getKey().substring(rootPath.length() + 1);
+            return input.getService().getId();
         };
 
-        final CallbackConsumer<ServiceHealth> callbackConsumer = new CallbackConsumer<ServiceHealth>() {
-            @Override
-            public void consume(BigInteger index, ConsulResponseCallback<List<ServiceHealth>> callback) {
-                healthClient.getHealthyServiceInstances(serviceName, watchParams(index, watchSeconds), callback);
-            }
-        };
+        final CallbackConsumer<ServiceHealth> callbackConsumer = (index, callback) -> healthClient.getHealthyServiceInstances(serviceName, watchParams(index, watchSeconds), callback);
 
 
         return new HealthCache(keyExtractor, callbackConsumer, serviceName);

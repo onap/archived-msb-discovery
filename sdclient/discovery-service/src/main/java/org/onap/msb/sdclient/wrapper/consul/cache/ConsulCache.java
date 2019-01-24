@@ -110,12 +110,7 @@ public class ConsulCache<K, V> {
                 LOGGER.error(String.format("Error getting response from consul. will retry in %d %s", backoffDelayQty,
                                 backoffDelayUnit), throwable);
 
-                executorService.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        runCallback();
-                    }
-                }, backoffDelayQty, backoffDelayUnit);
+                executorService.schedule(ConsulCache.this::runCallback, backoffDelayQty, backoffDelayUnit);
             }
         };
     }

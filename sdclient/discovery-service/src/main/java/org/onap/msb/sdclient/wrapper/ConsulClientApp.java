@@ -72,115 +72,112 @@ public class ConsulClientApp {
      */
     public HealthCache startHealthNodeListen(final String serviceName) {
         final HealthCache healthCache = HealthCache.newCache(healthClient, serviceName, 30);
-        healthCache.addListener(new HealthCache.Listener<String, ServiceHealth>() {
-            @Override
-            public void notify(Map<String, ServiceHealth> newValues) {
-                // do Something with updated server map
-                LOGGER.info(serviceName + "--new node notify--");
+        healthCache.addListener(newValues -> {
+            // do Something with updated server map
+            LOGGER.info(serviceName + "--new node notify--");
 
 
-                if (newValues.isEmpty()) {
-                    LOGGER.warn(serviceName + "--nodeList is Empty--");
-                    PublishAddressWrapper.publishApigateWayList.remove(serviceName);
+            if (newValues.isEmpty()) {
+                LOGGER.warn(serviceName + "--nodeList is Empty--");
+                PublishAddressWrapper.publishApigateWayList.remove(serviceName);
 
-                    try {
-                        healthCache.stop();
-                        LOGGER.info(serviceName + " Node Listen stopped");
-                    } catch (Exception e) {
-                        LOGGER.error(serviceName + " Node Listen stop throw exception", e);
-                    }
-
-                    return;
+                try {
+                    healthCache.stop();
+                    LOGGER.info(serviceName + " Node Listen stopped");
+                } catch (Exception e) {
+                    LOGGER.error(serviceName + " Node Listen stop throw exception", e);
                 }
-                // 服务发现变化
-                List<MicroServiceFullInfo> nodeAddressList = new ArrayList<MicroServiceFullInfo>();
-                for (Map.Entry<String, ServiceHealth> entry : newValues.entrySet()) {
 
-                    MicroServiceFullInfo microServiceInfo = new MicroServiceFullInfo();
+                return;
+            }
+            // 服务发现变化
+            List<MicroServiceFullInfo> nodeAddressList = new ArrayList<MicroServiceFullInfo>();
+            for (Map.Entry<String, ServiceHealth> entry : newValues.entrySet()) {
 
-                    ServiceHealth value = (ServiceHealth) entry.getValue();
-                    Service service = value.getService();
+                MicroServiceFullInfo microServiceInfo = new MicroServiceFullInfo();
 
-                    NodeInfo node = new NodeInfo();
-                    node.setIp(service.getAddress());
-                    node.setPort(String.valueOf(service.getPort()));
-                    Set<NodeInfo> nodes = new HashSet<NodeInfo>();
-                    nodes.add(node);
-                    microServiceInfo.setNodes(nodes);
+                ServiceHealth value = (ServiceHealth) entry.getValue();
+                Service service = value.getService();
 
-
-                    microServiceInfo.setServiceName(serviceName);
-
-                    try {
-                        List<String> tagList = service.getTags();
+                NodeInfo node = new NodeInfo();
+                node.setIp(service.getAddress());
+                node.setPort(String.valueOf(service.getPort()));
+                Set<NodeInfo> nodes = new HashSet<NodeInfo>();
+                nodes.add(node);
+                microServiceInfo.setNodes(nodes);
 
 
-                        for (String tag : tagList) {
+                microServiceInfo.setServiceName(serviceName);
 
-                            if (tag.startsWith("\"ns\"")) {
-                                String ms_ns_json = tag.split("\"ns\":")[1];
-                                Map<String, String> nsMap =
-                                                (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_ns_json, Map.class);
+                try {
+                    List<String> tagList = service.getTags();
 
-                                if (nsMap.get("namespace") != null) {
-                                    microServiceInfo.setNamespace(nsMap.get("namespace"));
-                                }
 
-                                continue;
+                    for (String tag : tagList) {
+
+                        if (tag.startsWith("\"ns\"")) {
+                            String ms_ns_json = tag.split("\"ns\":")[1];
+                            Map<String, String> nsMap =
+                                            (Map<String, String>) JacksonJsonUtil.jsonToBean(ms_ns_json, Map.class);
+
+                            if (nsMap.get("namespace") != null) {
+                                microServiceInfo.setNamespace(nsMap.get("namespace"));
                             }
 
-                            if (tag.startsWith("\"labels\"")) {
-                                String ms_labels_json = "{" + tag.split("\"labels\":\\{")[1];
-                                Map<String, String> labelMap = (Map<String, String>) JacksonJsonUtil
-                                                .jsonToBean(ms_labels_json, Map.class);
-
-                                List<String> nodeLabels = new ArrayList<String>();
-                                for (Map.Entry<String, String> labelEntry : labelMap.entrySet()) {
-                                    if ("visualRange".equals(labelEntry.getKey())) {
-                                        microServiceInfo.setVisualRange(labelEntry.getValue());
-                                    } else if ("network_plane_type".equals(labelEntry.getKey())) {
-                                        microServiceInfo.setNetwork_plane_type(labelEntry.getValue());
-                                    } else {
-                                        nodeLabels.add(labelEntry.getKey() + ":" + labelEntry.getValue());
-                                    }
-
-                                }
-
-                                microServiceInfo.setLabels(nodeLabels);
-                                continue;
-                            }
-
-                            if (tag.startsWith("\"metadata\"")) {
-                                String ms_metadata_json = "{" + tag.split("\"metadata\":\\{")[1];
-                                Map<String, String> metadataMap = (Map<String, String>) JacksonJsonUtil
-                                                .jsonToBean(ms_metadata_json, Map.class);
-
-                                List<KeyVaulePair> ms_metadata = new ArrayList<KeyVaulePair>();
-
-
-                                for (Map.Entry<String, String> metadataEntry : metadataMap.entrySet()) {
-                                    KeyVaulePair keyVaulePair = new KeyVaulePair();
-                                    keyVaulePair.setKey(metadataEntry.getKey());
-                                    keyVaulePair.setValue(metadataEntry.getValue());
-                                    ms_metadata.add(keyVaulePair);
-                                }
-                                microServiceInfo.setMetadata(ms_metadata);
-                                continue;
-                            }
-
+                            continue;
                         }
 
+                        if (tag.startsWith("\"labels\"")) {
+                            String ms_labels_json = "{" + tag.split("\"labels\":\\{")[1];
+                            Map<String, String> labelMap = (Map<String, String>) JacksonJsonUtil
+                                            .jsonToBean(ms_labels_json, Map.class);
 
-                    } catch (Exception e) {
-                        LOGGER.error(serviceName + " read tag  throw exception", e);
+                            List<String> nodeLabels = new ArrayList<String>();
+                            for (Map.Entry<String, String> labelEntry : labelMap.entrySet()) {
+                                if ("visualRange".equals(labelEntry.getKey())) {
+                                    microServiceInfo.setVisualRange(labelEntry.getValue());
+                                } else if ("network_plane_type".equals(labelEntry.getKey())) {
+                                    microServiceInfo.setNetwork_plane_type(labelEntry.getValue());
+                                } else {
+                                    nodeLabels.add(labelEntry.getKey() + ":" + labelEntry.getValue());
+                                }
+
+                            }
+
+                            microServiceInfo.setLabels(nodeLabels);
+                            continue;
+                        }
+
+                        if (tag.startsWith("\"metadata\"")) {
+                            String ms_metadata_json = "{" + tag.split("\"metadata\":\\{")[1];
+                            Map<String, String> metadataMap = (Map<String, String>) JacksonJsonUtil
+                                            .jsonToBean(ms_metadata_json, Map.class);
+
+                            List<KeyVaulePair> ms_metadata = new ArrayList<KeyVaulePair>();
+
+
+                            for (Map.Entry<String, String> metadataEntry : metadataMap.entrySet()) {
+                                KeyVaulePair keyVaulePair = new KeyVaulePair();
+                                keyVaulePair.setKey(metadataEntry.getKey());
+                                keyVaulePair.setValue(metadataEntry.getValue());
+                                ms_metadata.add(keyVaulePair);
+                            }
+                            microServiceInfo.setMetadata(ms_metadata);
+                            continue;
+                        }
+
                     }
 
-                    nodeAddressList.add(microServiceInfo);
+
+                } catch (Exception e) {
+                    LOGGER.error(serviceName + " read tag  throw exception", e);
                 }
 
-                PublishAddressWrapper.publishApigateWayList.put(serviceName, nodeAddressList);
-
+                nodeAddressList.add(microServiceInfo);
             }
+
+            PublishAddressWrapper.publishApigateWayList.put(serviceName, nodeAddressList);
+
         });
         try {
             LOGGER.info(serviceName + " Node Listen start");

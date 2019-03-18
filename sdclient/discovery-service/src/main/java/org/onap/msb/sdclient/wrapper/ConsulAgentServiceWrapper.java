@@ -42,7 +42,7 @@ public class ConsulAgentServiceWrapper {
 
 
         int registerResult =
-                        HttpClientUtil.httpPostWithJSON(consulRegisterurl, JacksonJsonUtil.beanToJson(agentService));
+                        HttpClientUtil.httpPutWithJSON(consulRegisterurl, JacksonJsonUtil.beanToJson(agentService));
 
         return registerResult;
 
@@ -52,7 +52,7 @@ public class ConsulAgentServiceWrapper {
         String consulDelurl = (new StringBuilder().append("http://").append(ConfigUtil.getInstance().getConsulAddress())
                         .append(DiscoverUtil.CONSUL_AGENT_URL).append("/deregister/").append(serviceId)).toString();
 
-        int delResult = HttpClientUtil.httpPostWithJSON(consulDelurl, "");
+        int delResult = HttpClientUtil.httpPutWithJSON(consulDelurl, "");
 
         return delResult;
     }

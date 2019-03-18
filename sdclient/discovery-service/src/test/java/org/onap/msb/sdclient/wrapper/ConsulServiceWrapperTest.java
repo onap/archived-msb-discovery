@@ -298,12 +298,12 @@ public class ConsulServiceWrapperTest {
 
     private void mockDelete() {
         String serviceJson = "{\"Node\": \"externalService\",\"ServiceID\": \"_test_10.74.56.36_5656\"}";
-        PowerMockito.when(HttpClientUtil.httpPostWithJSON(mockdeltUrl, serviceJson)).thenReturn(200);
+        PowerMockito.when(HttpClientUtil.httpPutWithJSON(mockdeltUrl, serviceJson)).thenReturn(200);
 
     }
 
     private void mockDelete4agent() {
-        PowerMockito.when(HttpClientUtil.httpPostWithJSON(
+        PowerMockito.when(HttpClientUtil.httpPutWithJSON(
                         "http://127.0.0.1:8500/v1/agent/service/deregister/_test_10.74.56.36_5656", ""))
                         .thenReturn(200);
 
@@ -320,7 +320,7 @@ public class ConsulServiceWrapperTest {
         PowerMockito.mockStatic(HttpClientUtil.class);
         String serviceJson =
                         "{\"Node\":\"externalService\",\"Address\":\"127.0.0.1\",\"Service\":{\"ID\":\"_test_10.74.44.1_10080\",\"Service\":\"test\",\"Tags\":[\"\\\"base\\\":{\\\"protocol\\\":\\\"REST\\\",\\\"status\\\":\\\"1\\\",\\\"enable_ssl\\\":\\\"false\\\",\\\"is_manual\\\":\\\"true\\\",\\\"url\\\":\\\"/api/test/v1\\\",\\\"version\\\":\\\"v1\\\"}\",\"\\\"labels\\\":{\\\"visualRange\\\":\\\"1\\\"}\"],\"Address\":\"10.74.44.1\",\"Port\":10080}}";
-        PowerMockito.when(HttpClientUtil.httpPostWithJSON(mockPostUrl, serviceJson)).thenReturn(200);
+        PowerMockito.when(HttpClientUtil.httpPutWithJSON(mockPostUrl, serviceJson)).thenReturn(200);
 
 
     }

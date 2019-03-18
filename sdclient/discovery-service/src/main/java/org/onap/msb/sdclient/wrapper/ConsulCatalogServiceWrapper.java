@@ -45,7 +45,7 @@ public class ConsulCatalogServiceWrapper {
 
 
         int registerResult =
-                        HttpClientUtil.httpPostWithJSON(consulRegisterurl, JacksonJsonUtil.beanToJson(catalogNode));
+                        HttpClientUtil.httpPutWithJSON(consulRegisterurl, JacksonJsonUtil.beanToJson(catalogNode));
 
         return registerResult;
 
@@ -58,7 +58,7 @@ public class ConsulCatalogServiceWrapper {
         String nodeJson =
                         "{\"Node\": \"" + DiscoverUtil.EXTERNAL_NODE_NAME + "\",\"ServiceID\": \"" + serviceId + "\"}";
 
-        int delResult = HttpClientUtil.httpPostWithJSON(consulDelurl, nodeJson);
+        int delResult = HttpClientUtil.httpPutWithJSON(consulDelurl, nodeJson);
 
         return delResult;
     }

@@ -26,6 +26,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -39,6 +40,34 @@ import org.slf4j.LoggerFactory;
 public class HttpClientUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
+
+    public static int httpPutWithJSON(String url, String params) {
+        int result = 0;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPut httpPut = new HttpPut(url);
+        httpPut.addHeader("Content-type", "application/json; charset=utf-8");
+        httpPut.setHeader("Accept", "application/json");
+        httpPut.setEntity(new StringEntity(params, Charset.forName("UTF-8")));
+        try {
+            CloseableHttpResponse res = httpClient.execute(httpPut);
+            result = res.getStatusLine().getStatusCode();
+            if (res.getStatusLine().getStatusCode() != 200) {
+                logger.error(String.valueOf(result));
+            }
+            res.close();
+        } catch (IOException e) {
+            String errorMsg = url + ":httpPutWithJSON connect faild";
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                String errorMsg = url + ":close  httpClient faild";
+            }
+        }
+
+        return result;
+
+    }
 
     public static int httpPostWithJSON(String url, String params) {
         int result = 0;

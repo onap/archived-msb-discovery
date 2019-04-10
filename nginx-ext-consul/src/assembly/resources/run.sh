@@ -21,10 +21,10 @@ _NGINXCMD="$HOME/sbin/nginx"
 
 LUAJIT_HOME=`cd $DIRNAME/luajit; pwd`
 echo =========== prepare the symbolic links  ========================================
-ln -s -f $_NGINXCMD $DIRNAME/bin/openresty
-ln -s -f $LUAJIT_HOME/bin/luajit2.1.0-beta2 $LUAJIT_HOME/bin/luajit
-ln -s -f $LUAJIT_HOME/lib/libluajit-5.1.so.2.1.0 $LUAJIT_HOME/lib/libluajit-5.1.so.2
-ln -s -f $LUAJIT_HOME/lib/libluajit-5.1.so.2.1.0 $LUAJIT_HOME/lib/libluajit-5.1.so
+sudo ln -s -f $_NGINXCMD $DIRNAME/bin/openresty
+sudo ln -s -f $LUAJIT_HOME/bin/luajit2.1.0-beta2 $LUAJIT_HOME/bin/luajit
+sudo ln -s -f $LUAJIT_HOME/lib/libluajit-5.1.so.2.1.0 $LUAJIT_HOME/lib/libluajit-5.1.so.2
+sudo ln -s -f $LUAJIT_HOME/lib/libluajit-5.1.so.2.1.0 $LUAJIT_HOME/lib/libluajit-5.1.so
 echo ================================================================================
 
 echo =========== create symbolic link for libluajit-5.1.so.2  ========================================
@@ -32,8 +32,8 @@ LUAJIT_HOME=`cd $DIRNAME/luajit; pwd`
 LUAJIT_FILENAME="$LUAJIT_HOME/lib/libluajit-5.1.so.2"
 LN_TARGET_FILE='/lib/libluajit-5.1.so.2'
 LN_TARGET_FILE64='/lib64/libluajit-5.1.so.2'
-ln -s -f $LUAJIT_FILENAME $LN_TARGET_FILE
-ln -s -f $LUAJIT_FILENAME $LN_TARGET_FILE64
+sudo ln -s -f $LUAJIT_FILENAME $LN_TARGET_FILE
+sudo ln -s -f $LUAJIT_FILENAME $LN_TARGET_FILE64
 echo ===============================================================================
 echo HOME=$HOME
 echo _NGINXCMD=$_NGINXCMD

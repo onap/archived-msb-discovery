@@ -21,16 +21,16 @@
     <parent>
       <groupId>org.onap.msb.discovery</groupId>
       <artifactId>msb-discovery-parent</artifactId>
-      <version>1.2.3-SNAPSHOT</version>
+      <version>1.2.5-SNAPSHOT</version>
     </parent>
 
     <groupId>org.onap.msb.discovery.distributions</groupId>
     <artifactId>distributions-parent</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
+    <version>1.2.5-SNAPSHOT</version>
     <name>onap/msb/discovery/distributions</name>
     <packaging>pom</packaging>
     <modules>
-        <module>msb-discovery</module>    
+        <module>msb-discovery</module>
     </modules>
 
 

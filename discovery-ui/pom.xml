@@ -21,14 +21,14 @@
   <parent>
   <groupId>org.onap.msb.discovery</groupId>
   <artifactId>msb-discovery-parent</artifactId>
-  <version>1.2.3-SNAPSHOT</version>    
+  <version>1.2.5-SNAPSHOT</version>
   </parent>
 
   <groupId>org.onap.msb.discovery</groupId>
   <artifactId>discovery-ui</artifactId>
   <name>onap/msb/discovery/discovery-ui</name>
   <packaging>jar</packaging>
-  <version>1.2.3-SNAPSHOT</version> 
+  <version>1.2.5-SNAPSHOT</version>
 
-  
+
 </project>

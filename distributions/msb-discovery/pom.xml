@@ -16,7 +16,8 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>org.onap.msb.discovery.distributions</groupId>
     <artifactId>distributions-parent</artifactId>
@@ -33,206 +34,224 @@
 
     <openresty.version>1.11.2.2</openresty.version>
     <packageid>msb-discovery</packageid>
-
-    <version.output>target/version</version.output>
     <html.dir>openresty/nginx/html</html.dir>
+    <version.output>${project.basedir}/target/version</version.output>
+    <docker.image.name>onap/msb/msb_discovery</docker.image.name>
+    <docker.tag>${project.version}-${timestamp}</docker.tag>
+    <docker.latest.tag>${project.version}-latest</docker.latest.tag>
   </properties>
 
-  <dependencies>
-    <!--
-	<dependency>
-         <groupId>org.openresty.centos.6</groupId>
-         <artifactId>openresty</artifactId>
-         <version>${openresty.version}</version>
-         <type>tar.gz</type>
-    </dependency>
-    -->
-    
-     <dependency>
-      <groupId>org.onap.msb.discovery</groupId>
-      <artifactId>nginx-ext-consul</artifactId>
-      <type>zip</type>
-      <version>${project.version}</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.onap.msb.discovery.sdclient</groupId>
-      <artifactId>discovery-standalone</artifactId>
-      <type>zip</type>
-      <version>${project.version}</version>
-      <optional>true</optional>
-    </dependency>    
+  <profiles>
+    <profile>
+      <id>linux</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.onap.msb.discovery</groupId>
+          <artifactId>nginx-ext-consul</artifactId>
+          <type>zip</type>
+          <version>${project.version}</version>
+          <optional>true</optional>
+        </dependency>
+        <dependency>
+          <groupId>org.onap.msb.discovery.sdclient</groupId>
+          <artifactId>discovery-standalone</artifactId>
+          <type>zip</type>
+          <version>${project.version}</version>
+          <optional>true</optional>
+        </dependency>
 
-  </dependencies>   
+      </dependencies>
 
 
-  <build>    
-    <plugins>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-resources-dockerfile</id>                 
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>            
-              <outputDirectory>${version.output}</outputDirectory>
-              <includeEmptyDirs>true</includeEmptyDirs>
-              <resources>     
-                <resource>
-                  <directory>${dockerFileDir}</directory>
-                  <filtering>false</filtering>
-                  <includes>
-                    <include>**/*</include>
-                  </includes>
-                </resource>  
-              </resources>
-              <overwrite>true</overwrite>
-            </configuration>
-          </execution>
-  
-          <execution>
-            <id>copy-resources-linux64</id>                 
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>            
-              <outputDirectory>${linux64outputdir}</outputDirectory>
-              <includeEmptyDirs>true</includeEmptyDirs>
-              <resources>     
-                <resource>
-                  <directory>src/assembly/resources</directory>
-                  <filtering>false</filtering>
-                  <includes>
-                    <include>**/*</include>
-                  </includes>
-                  <excludes>
-                    <exclude>**/*.bat</exclude>
-                  </excludes>
-                </resource>  
-              </resources>
-              <overwrite>true</overwrite>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-resources-dockerfile</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${version.output}</outputDirectory>
+                  <includeEmptyDirs>true</includeEmptyDirs>
+                  <resources>
+                    <resource>
+                      <directory>${dockerFileDir}</directory>
+                      <filtering>false</filtering>
+                      <includes>
+                        <include>**/*</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                  <overwrite>true</overwrite>
+                </configuration>
+              </execution>
 
-      <!--
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>      
-          <execution>
-            <id>unpack-nginx</id>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <phase>generate-resources</phase>
+              <execution>
+                <id>copy-resources-linux64</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${linux64outputdir}</outputDirectory>
+                  <includeEmptyDirs>true</includeEmptyDirs>
+                  <resources>
+                    <resource>
+                      <directory>src/assembly/resources</directory>
+                      <filtering>false</filtering>
+                      <includes>
+                        <include>**/*</include>
+                      </includes>
+                      <excludes>
+                        <exclude>**/*.bat</exclude>
+                      </excludes>
+                    </resource>
+                  </resources>
+                  <overwrite>true</overwrite>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpacktolinux64</id>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <phase>prepare-package</phase>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.onap.msb.discovery</groupId>
+                      <artifactId>nginx-ext-consul</artifactId>
+                      <type>zip</type>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.onap.msb.discovery.sdclient</groupId>
+                      <artifactId>discovery-standalone</artifactId>
+                      <type>zip</type>
+                    </artifactItem>
+                  </artifactItems>
+                  <excludes>**/*.bat,*.cmd,META-INF/**</excludes>
+                  <outputDirectory>${linux64outputdir}</outputDirectory>
+                  <overWriteReleases>false</overWriteReleases>
+                  <overWriteSnapshots>true</overWriteSnapshots>
+                  <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>distribution</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target name="distribution">
+                    <tar destfile="${version.output}/${packageid}-${project.version}-${classifier.linux64}.tar.gz" longfile="posix" compression="gzip">
+                      <tarfileset dir="${linux64outputdir}" prefix="${packageid}" filemode="0644" dirmode="0755">
+                        <exclude name="**/*.sh"/>
+                        <exclude name="openresty/nginx/sbin/nginx"/>
+                      </tarfileset>
+                      <tarfileset dir="${linux64outputdir}" prefix="${packageid}" filemode="0755" dirmode="0755">
+                        <include name="**/*.sh"/>
+                        <include name="openresty/nginx/sbin/nginx"/>
+                      </tarfileset>
+                    </tar>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>docker</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.19.1</version>
+            <dependencies>
+              <dependency>
+                <groupId>com.github.jnr</groupId>
+                <artifactId>jnr-unixsocket</artifactId>
+                <version>0.13</version>
+              </dependency>
+            </dependencies>
             <configuration>
-              <artifactItems>   
-				<artifactItem>
-					<groupId>org.openresty.centos.6</groupId>
-                    <artifactId>openresty</artifactId>
-                    <type>tar.gz</type>
-                    <outputDirectory>${linux64outputdir}</outputDirectory>         
-                </artifactItem>
-              </artifactItems>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>true</overWriteSnapshots>
-              <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
+              <verbose>true</verbose>
+              <apiVersion>1.23</apiVersion>
+              <registry>nexus3.onap.org:10003</registry>
+              <images>
+                <image>
+                  <name>${docker.image.name}</name>
+                  <alias>docker_msb_discovery</alias>
+                  <build>
+                    <cleanup>true</cleanup>
+                    <tags>
+                      <tag>${docker.tag}</tag>
+                      <tag>${docker.latest.tag}</tag>
+                    </tags>
+                    <dockerFileDir>${version.output}</dockerFileDir>
+                    <!--assembly>
+                        <descriptorRef>artifact</descriptorRef>
+                    </assembly-->
+                  </build>
+                </image>
+              </images>
             </configuration>
-          </execution>          
-        </executions>
-      </plugin> 
-     
-      
-      <plugin>
-        <groupId>com.coderplus.maven.plugins</groupId>
-        <artifactId>copy-rename-maven-plugin</artifactId>
-        <version>1.0.1</version>
-        <executions>
-          <execution>
-            <id>rename-nginx-dir</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>rename</goal>
-            </goals>
-            <configuration>
-              <sourceFile>${linux64outputdir}/openresty-${openresty.version}</sourceFile>
-              <destinationFile>${linux64outputdir}/openresty</destinationFile>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin> 
-       -->
-
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>      
-          <execution>
-            <id>unpacktolinux64</id>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <phase>prepare-package</phase>
-            <configuration>
-              <artifactItems>   
-                <artifactItem>
-                  <groupId>org.onap.msb.discovery</groupId>
-                  <artifactId>nginx-ext-consul</artifactId>
-                  <type>zip</type>            
-                </artifactItem> 
-                <artifactItem>
-                  <groupId>org.onap.msb.discovery.sdclient</groupId>
-                  <artifactId>discovery-standalone</artifactId>
-                  <type>zip</type>
-                </artifactItem>                       
-              </artifactItems>
-              <excludes>**/*.bat,*.cmd,META-INF/**</excludes>
-              <outputDirectory>${linux64outputdir}</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>true</overWriteSnapshots>
-              <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
-            </configuration>
-          </execution>          
-        </executions>
-      </plugin> 
-
-
-<plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-antrun-plugin</artifactId>
-  <executions>
-    <execution>
-      <id>distribution</id>
-      <phase>package</phase>
-      <goals>
-        <goal>run</goal>
-      </goals>
-      <configuration>
-        <target name="distribution">
-          <tar destfile="${version.output}/${packageid}-${project.version}-${classifier.linux64}.tar.gz" longfile="posix" compression="gzip">
-            <tarfileset dir="${linux64outputdir}" prefix="${packageid}" filemode="0644" dirmode="0755">
-              <exclude name="**/*.sh"/>
-              <exclude name="openresty/nginx/sbin/nginx"/>
-            </tarfileset>
-            <tarfileset dir="${linux64outputdir}" prefix="${packageid}" filemode="0755" dirmode="0755">
-              <include name="**/*.sh"/>
-              <include name="openresty/nginx/sbin/nginx"/>
-            </tarfileset>
-          </tar>
-        </target>
-      </configuration>
-    </execution>
-  </executions>
-</plugin>
-</plugins>
-</build>
-
+            <executions>
+              <execution>
+                <id>clean-images</id>
+                <phase>pre-clean</phase>
+                <goals>
+                  <goal>remove</goal>
+                </goals>
+                <configuration>
+                  <removeAll>true</removeAll>
+                  <image>docker_msb_discovery</image>
+                </configuration>
+              </execution>
+              <execution>
+                <id>generate-images</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>push-images</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>push</goal>
+                </goals>
+                <configuration>
+                  <image>${docker.image.name}</image>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
 

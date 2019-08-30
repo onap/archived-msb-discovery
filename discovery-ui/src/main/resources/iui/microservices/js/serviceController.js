@@ -91,7 +91,8 @@ var vm = avalon
 				namespace:"",
 				network_plane_type:"",
 				host:"",
-				path:""			
+				path:"",
+				enable_ssl:[]
 			},
 			nodeInfo:{
 				ip:"",
@@ -193,6 +194,7 @@ var vm = avalon
 				vm.msbRouteInfo.network_plane_type="";
 				vm.msbRouteInfo.host="";
 				vm.msbRouteInfo.path="";
+				vm.msbRouteInfo.enable_ssl=[];
 			
 				
 				vm.server_rtn.warning_block=false;
@@ -250,7 +252,12 @@ var vm = avalon
 							vm.msbRouteInfo.network_plane_type=msbRouteInfo.network_plane_type;
 							vm.msbRouteInfo.host=msbRouteInfo.host;
 							vm.msbRouteInfo.path=msbRouteInfo.path;
-						
+							if (msbRouteInfo.enable_ssl == true){
+								vm.msbRouteInfo.enable_ssl=["true"];
+							}else{
+								vm.msbRouteInfo.enable_ssl=[];
+							}
+													
 							  $("#labels").val(msbRouteInfo.labels);
 							  $('#labels').on('tokenfield:createdtoken', function (e) {
 							    var re = /\S+:\S+/
@@ -879,7 +886,11 @@ var vm = avalon
 				//var newServiceName=(vm.msbRouteInfo.protocol=="UI"?("IUI_"+vm.msbRouteInfo.serviceName):vm.msbRouteInfo.serviceName);
 				var newServiceName=vm.msbRouteInfo.serviceName;
 
-			
+				var enable_ssl = false;
+				if (vm.msbRouteInfo.enable_ssl.length > 0){
+					enable_ssl = true;
+				}
+
 
 				var data= JSON.stringify({
 							 "serviceName": newServiceName,
@@ -894,6 +905,7 @@ var vm = avalon
 							  "network_plane_type":vm.msbRouteInfo.network_plane_type,
 							  "host":vm.msbRouteInfo.host,
 							  "path":vm.msbRouteInfo.path,
+							  "enable_ssl":enable_ssl,
 							  "labels":	labelArray,
 							  "metadata":metadata
 						});

@@ -33,11 +33,12 @@
   <properties>
 
     <openresty.version>1.11.2.2</openresty.version>
+    <maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
     <packageid>msb-discovery</packageid>
     <html.dir>openresty/nginx/html</html.dir>
     <version.output>${project.basedir}/target/version</version.output>
     <docker.image.name>onap/msb/msb_discovery</docker.image.name>
-    <docker.tag>${project.version}-${timestamp}</docker.tag>
+    <docker.tag>${project.version}-${maven.build.timestamp}</docker.tag>
     <docker.latest.tag>${project.version}-latest</docker.latest.tag>
   </properties>
 

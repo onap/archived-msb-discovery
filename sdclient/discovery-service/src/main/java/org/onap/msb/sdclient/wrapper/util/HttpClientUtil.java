@@ -40,13 +40,17 @@ import org.slf4j.LoggerFactory;
 public class HttpClientUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
+    private static final String CONTENT_TYPE = "Content-type";
+    private static final String APPLICATION_JSON_CHARSET = "application/json; charset=utf-8";
+    private static final String APPLICATION_JSON = "application/json";
+    private static final String ACCEPT = "Accept";
 
     public static int httpPutWithJSON(String url, String params) {
         int result = 0;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPut httpPut = new HttpPut(url);
-        httpPut.addHeader("Content-type", "application/json; charset=utf-8");
-        httpPut.setHeader("Accept", "application/json");
+        httpPut.addHeader(CONTENT_TYPE, APPLICATION_JSON_CHARSET);
+        httpPut.setHeader(ACCEPT, APPLICATION_JSON);
         httpPut.setEntity(new StringEntity(params, Charset.forName("UTF-8")));
         try {
             CloseableHttpResponse res = httpClient.execute(httpPut);
@@ -57,11 +61,13 @@ public class HttpClientUtil {
             res.close();
         } catch (IOException e) {
             String errorMsg = url + ":httpPutWithJSON connect faild";
+            logger.error(errorMsg, e);
         } finally {
             try {
                 httpClient.close();
             } catch (IOException e) {
                 String errorMsg = url + ":close  httpClient faild";
+                logger.error(errorMsg, e);
             }
         }
 
@@ -73,8 +79,8 @@ public class HttpClientUtil {
         int result = 0;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
-        httpPost.addHeader("Content-type", "application/json; charset=utf-8");
-        httpPost.setHeader("Accept", "application/json");
+        httpPost.addHeader(CONTENT_TYPE, APPLICATION_JSON_CHARSET);
+        httpPost.setHeader(ACCEPT, APPLICATION_JSON);
         httpPost.setEntity(new StringEntity(params, Charset.forName("UTF-8")));
         try {
             CloseableHttpResponse res = httpClient.execute(httpPost);
@@ -85,11 +91,13 @@ public class HttpClientUtil {
             res.close();
         } catch (IOException e) {
             String errorMsg = url + ":httpPostWithJSON connect faild";
+            logger.error(errorMsg, e);
         } finally {
             try {
                 httpClient.close();
             } catch (IOException e) {
                 String errorMsg = url + ":close  httpClient faild";
+                logger.error(errorMsg, e);
             }
         }
 
@@ -121,11 +129,13 @@ public class HttpClientUtil {
             res.close();
         } catch (IOException e) {
             String errorMsg = baseUrl + ":delete connect faild";
+            logger.error(errorMsg, e);
         } finally {
             try {
                 httpClient.close();
             } catch (IOException e) {
                 String errorMsg = baseUrl + ":close  httpClient faild";
+                logger.error(errorMsg, e);
             }
         }
 
@@ -135,8 +145,8 @@ public class HttpClientUtil {
         String result = null;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
-        httpGet.addHeader("Content-type", "application/json; charset=utf-8");
-        httpGet.setHeader("Accept", "application/json");
+        httpGet.addHeader(CONTENT_TYPE, APPLICATION_JSON_CHARSET);
+        httpGet.setHeader(ACCEPT, APPLICATION_JSON);
         try {
             CloseableHttpResponse res = httpClient.execute(httpGet);
 
@@ -169,8 +179,8 @@ public class HttpClientUtil {
     public static <T> ConsulResponse<T> httpWaitGet(String url) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
-        httpGet.addHeader("Content-type", "application/json; charset=utf-8");
-        httpGet.setHeader("Accept", "application/json");
+        httpGet.addHeader(CONTENT_TYPE, APPLICATION_JSON_CHARSET);
+        httpGet.setHeader(ACCEPT, APPLICATION_JSON);
         try {
             CloseableHttpResponse res = httpClient.execute(httpGet);
             String result = EntityUtils.toString(res.getEntity());
@@ -212,22 +222,22 @@ public class HttpClientUtil {
         HttpGet httpGet = new HttpGet(url);
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(10000).setConnectTimeout(10000).build();// 设置请求和传输超时时间
         httpGet.setConfig(requestConfig);
-        httpGet.addHeader("Content-type", "application/json; charset=utf-8");
-        httpGet.setHeader("Accept", "application/json");
+        httpGet.addHeader(CONTENT_TYPE, APPLICATION_JSON_CHARSET);
+        httpGet.setHeader(ACCEPT, APPLICATION_JSON);
         try {
             CloseableHttpResponse res = httpClient.execute(httpGet);
 
             iStatus = res.getStatusLine().getStatusCode();
             res.close();
         } catch (ClientProtocolException e) {
-            logger.error(url + " httpGet connect faild:" + e.getMessage());
+            logger.error(url, " httpGet connect faild:" , e);
         } catch (IOException e) {
-            logger.error(url + " httpGet connect faild:" + e.getMessage());
+            logger.error(url, " httpGet connect faild:" , e);
         } finally {
             try {
                 httpClient.close();
             } catch (IOException e) {
-                logger.error(url + " httpGet close faild:" + e.getMessage());
+                logger.error(url ," httpGet close faild:" , e);
             }
         }
 

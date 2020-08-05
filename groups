@@ -1,4 +1,5 @@
 # UUID                                                                        	Group Name
 #
+a6c408246499c073b8a2b084c3d4fe9f2cf5c700                                      	saml/onap-gerrit-msb-discovery-committers
 daebbf523be390041a1a9c0e340a6d833aae5043                                      	GitHub Replication
 ldap:cn=onap-gerrit-msb-discovery-committers,ou=Groups,dc=freestandards,dc=org	ldap/onap-gerrit-msb-discovery-committers

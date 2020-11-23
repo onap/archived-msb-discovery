@@ -1,0 +1,9 @@
+---
+distribution_type: container
+log_dir: msb-discovery-maven-docker-stage-master/490/
+project: msb-discovery
+container_release_tag: 1.2.7
+ref: 55b16ab4afff6b087e4ed5d1e37b0ee31c015750
+containers:
+    - name: 'msb/msb_discovery'
+      version: '1.2.7-20201123T124511Z'

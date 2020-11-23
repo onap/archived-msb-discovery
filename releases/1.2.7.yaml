@@ -1,0 +1,5 @@
+---
+distribution_type: maven
+log_dir: msb-discovery-maven-stage-master/512/
+project: msb-discovery
+version: 1.2.7

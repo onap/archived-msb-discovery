@@ -13,14 +13,14 @@
 	<parent>
 		<groupId>org.onap.msb.discovery</groupId>
 		<artifactId>sdclient</artifactId>
-		<version>1.2.6-SNAPSHOT</version>
+		<version>1.2.7-SNAPSHOT</version>
 	</parent>
 
 	<groupId>org.onap.msb.discovery.sdclient</groupId>
 	<artifactId>discovery-service</artifactId>
 	<name>onap/msb/discovery/sdclient/discovery-service</name>
 	<packaging>jar</packaging>
-	<version>1.2.6-SNAPSHOT</version>
+	<version>1.2.7-SNAPSHOT</version>
 
 
 	<dependencies>
